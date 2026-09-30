@@ -1,0 +1,142 @@
+---
+title: "STA 322 Project 1: Sampling Design"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Frame
+
+Sampling frame: 36 Trinity units (departmental websites), N = total faculty listed.
+ROTC units and Health, Wellness & PE are kept in the frame.
+
+```{r frame}
+frame <- read.csv("faculty_counts.csv", stringsAsFactors = FALSE)
+frame$non_phd_count <- frame$total_faculty - frame$phd_count
+N <- sum(frame$total_faculty)
+n <- 100
+c(N = N, n = n, sampling_fraction = n / N)
+```
+
+## Strata
+
+Stratified sampling with allocation proportional to size (PPS allocation), which
+gives every faculty member (nearly) the same inclusion probability n/N, so the design
+is approximately self-weighting. To keep the weights equal, no stratum may need a
+minimum sample size override: every stratum must have a proportional share
+n * N_h / N of at least 2 (so N_h >= about 17.3), which also gives a within-stratum
+variance estimate. Departments below that size are pooled with related units. Every
+other department is its own stratum.
+
+```{r strata}
+pool <- list(
+  "Military & PE (pooled)" = c("Air Force ROTC", "Army ROTC", "Navy ROTC",
+                               "Health, Wellness & Physical Education"),
+  "Small languages (pooled)" = c("International Comparative Studies",
+                                 "Slavic & Eurasian Studies", "Romance Studies",
+                                 "German Studies"),
+  "Dance & Theater (pooled)" = c("Dance", "Theater Studies"),
+  "Education & Gender Studies (pooled)" = c("Education",
+                                            "Gender, Sexuality & Feminist Studies"),
+  "Classical & Religious Studies (pooled)" = c("Classical Studies",
+                                               "Religious Studies")
+)
+frame$stratum <- frame$department
+for (s in names(pool)) frame$stratum[frame$department %in% pool[[s]]] <- s
+
+strata <- aggregate(cbind(N_h = total_faculty, phd_h = phd_count) ~ stratum,
+                    data = frame, FUN = sum)
+nrow(strata)
+```
+
+## Allocation
+
+Proportional allocation with largest-remainder rounding so the total is exactly
+n = 100. Because n_h must be an integer, weights N_h / n_h are equal only up to
+rounding; the design weight is still used in estimation.
+
+```{r alloc}
+strata$exact <- n * strata$N_h / N
+strata$n_h <- floor(strata$exact)
+short <- n - sum(strata$n_h)
+bump <- order(strata$exact - strata$n_h, decreasing = TRUE)[seq_len(short)]
+strata$n_h[bump] <- strata$n_h[bump] + 1
+strata$weight <- strata$N_h / strata$n_h   # design weight, ~N/n
+stopifnot(sum(strata$n_h) == n, all(strata$n_h >= 2))
+knitr::kable(strata[order(strata$stratum), ], digits = 2,
+             col.names = c("Stratum", "N_h", "PhDs", "Exact n_h", "n_h", "Weight"))
+range(strata$weight)
+```
+
+## Draw the sample
+
+Random positions within each stratum's roster, with a fixed seed. For the
+pooled strata, positions run through the member departments in the order below,
+then are mapped back to a department and a position within that department's
+roster list (order on the department website).
+
+```{r draw}
+set.seed(322)
+rows <- list()
+for (i in seq_len(nrow(strata))) {
+  s <- strata$stratum[i]
+  members <- frame[frame$stratum == s, ]
+  pos <- sort(sample(strata$N_h[i], strata$n_h[i]))
+  ends <- cumsum(members$total_faculty)
+  starts <- ends - members$total_faculty
+  idx <- findInterval(pos - 1, ends) + 1
+  rows[[i]] <- data.frame(stratum = s, department = members$department[idx],
+                          roster_position = pos - starts[idx])
+}
+sample_ids <- do.call(rbind, rows)
+sample_ids$weight <- strata$weight[match(sample_ids$stratum, strata$stratum)]
+nrow(sample_ids)
+write.csv(sample_ids, "sample_ids.csv", row.names = FALSE)
+knitr::kable(sample_ids[, c("department", "roster_position")], row.names = FALSE)
+```
+
+The sample size per department:
+
+```{r bydept}
+knitr::kable(as.data.frame(table(Department = sample_ids$department)),
+             col.names = c("Department", "Sample size"))
+```
+
+## Survey design object
+
+Stratified SRS without replacement: strata are the 30 strata above, `fpc` is the
+stratum population size N_h, and the weight is N_h / n_h.
+
+```{r design-check, message=FALSE}
+library(survey)
+sample_ids$N_h <- strata$N_h[match(sample_ids$stratum, strata$stratum)]
+sample_ids$one <- 1
+svytotal(~one, svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
+                         fpc = ~N_h, data = sample_ids))
+```
+
+## Estimation (run after data collection)
+
+Fill in `faculty_sample.csv` with one row per sampled faculty member: the columns of
+`sample_ids.csv` plus `female` (0/1), `ongoing_grant_2026` (0/1), `has_phd` (0/1),
+`phd_year` (blank if no PhD) and any Q4 variable. This section runs only once the file exists.
+
+```{r estimate, eval=file.exists("faculty_sample.csv"), message=FALSE}
+dat <- read.csv("faculty_sample.csv")
+dat$N_h <- strata$N_h[match(dat$stratum, strata$stratum)]
+dat$weight <- strata$weight[match(dat$stratum, strata$stratum)]
+dat$years_since_phd <- ifelse(dat$has_phd == 1, 2026 - dat$phd_year, NA)
+des <- svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
+                 fpc = ~N_h, data = dat)
+
+# Q1 and Q2: proportions with 95% CIs
+q1 <- svyciprop(~female, des);             q1; confint(q1)
+q2 <- svyciprop(~ongoing_grant_2026, des); q2; confint(q2)
+
+# Q3: mean among PhD holders only. subset() on the design object is the correct
+# domain estimator (a ratio estimate), not re-analyzing a separate sample.
+des_phd <- subset(des, has_phd == 1)
+q3 <- svymean(~years_since_phd, des_phd); q3; confint(q3)
+```
