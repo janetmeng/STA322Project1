@@ -1,0 +1,101 @@
+collector,stratum,department,roster_position,weight,name,female,ongoing_grant_2026,has_phd,phd_year,rank_title,full_professor,notes
+Janet,African & African American Studies,African & African American Studies,5,9,,,,,,,,
+Janet,African & African American Studies,African & African American Studies,7,9,,,,,,,,
+Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",1,9,,,,,,,,
+Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",2,9,,,,,,,,
+Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",10,9,,,,,,,,
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,1,9,,,,,,,,
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,5,9,,,,,,,,
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,25,9,,,,,,,,
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,29,9,,,,,,,,
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,44,9,,,,,,,,
+Janet,Biology,Biology,4,8.71428571428571,,,,,,,,
+Janet,Biology,Biology,24,8.71428571428571,,,,,,,,
+Janet,Biology,Biology,25,8.71428571428571,,,,,,,,
+Janet,Biology,Biology,35,8.71428571428571,,,,,,,,
+Janet,Biology,Biology,49,8.71428571428571,,,,,,,,
+Janet,Biology,Biology,51,8.71428571428571,,,,,,,,
+Janet,Biology,Biology,53,8.71428571428571,,,,,,,,
+Janet,Chemistry,Chemistry,4,9,,,,,,,,
+Janet,Chemistry,Chemistry,10,9,,,,,,,,
+Janet,Chemistry,Chemistry,13,9,,,,,,,,
+Janet,Classical & Religious Studies (pooled),Classical Studies,4,9,,,,,,,,
+Janet,Classical & Religious Studies (pooled),Religious Studies,3,9,,,,,,,,
+Janet,Classical & Religious Studies (pooled),Religious Studies,9,9,,,,,,,,
+Janet,Computer Science,Computer Science,1,9.5,,,,,,,,
+Janet,Computer Science,Computer Science,17,9.5,,,,,,,,
+Janet,Computer Science,Computer Science,20,9.5,,,,,,,,
+Janet,Computer Science,Computer Science,34,9.5,,,,,,,,
+Janet,Cultural Anthropology,Cultural Anthropology,13,8.5,,,,,,,,
+Janet,Cultural Anthropology,Cultural Anthropology,16,8.5,,,,,,,,
+Janet,Dance & Theater (pooled),Dance,5,9.33333333333333,,,,,,,,
+Janet,Dance & Theater (pooled),Theater Studies,13,9.33333333333333,,,,,,,,
+Janet,Dance & Theater (pooled),Theater Studies,20,9.33333333333333,,,,,,,,
+Janet,Economics,Economics,15,8.57142857142857,,,,,,,,
+Janet,Economics,Economics,18,8.57142857142857,,,,,,,,
+Janet,Economics,Economics,23,8.57142857142857,,,,,,,,
+Janet,Economics,Economics,27,8.57142857142857,,,,,,,,
+Janet,Economics,Economics,30,8.57142857142857,,,,,,,,
+Janet,Economics,Economics,40,8.57142857142857,,,,,,,,
+Janet,Economics,Economics,56,8.57142857142857,,,,,,,,
+Janet,Education & Gender Studies (pooled),Education,2,10,,,,,,,,
+Janet,Education & Gender Studies (pooled),"Gender, Sexuality & Feminist Studies",8,10,,,,,,,,
+Janet,English,English,12,8.25,,,,,,,,
+Janet,English,English,13,8.25,,,,,,,,
+Janet,English,English,16,8.25,,,,,,,,
+Janet,English,English,29,8.25,,,,,,,,
+Janet,Evolutionary Anthropology,Evolutionary Anthropology,4,8.5,,,,,,,,
+Janet,Evolutionary Anthropology,Evolutionary Anthropology,16,8.5,,,,,,,,
+Janet,History,History,7,9,,,,,,,,
+Janet,History,History,10,9,,,,,,,,
+Janet,History,History,12,9,,,,,,,,
+Amy,Linguistics,Linguistics,7,10,Luciana Fellin,1,0,1,2001,Professor of the Practice of Romance Studies,1,NA
+Amy,Linguistics,Linguistics,14,10,Mary Osborne,1,0,0,NA,Lecturing Fellow in the Linguistics Program,0,NA
+Amy,Literature,Literature,14,8.5,Luciana Parisi,1,0,1,1999,Professor of Literature,1,NA
+Amy,Literature,Literature,16,8.5,Antonio Viego,0,0,1,1999,Associate Professor of Literature,0,NA
+Amy,Mathematics,Mathematics,1,8.28571428571429,Victoria S Akin,1,0,1,2017,Associate Professor of the Practice of Mathematics,0,NA
+Amy,Mathematics,Mathematics,3,8.28571428571429,Rann Bar-On,0,0,1,2009,Senior Lecturer of Mathematics,0,NA
+Amy,Mathematics,Mathematics,12,8.28571428571429,Maria-Veronica Ciocanel,1,1,1,2017,Assistant Professor of Mathematics,0,NA
+Amy,Mathematics,Mathematics,18,8.28571428571429,Tarek M Elgindi,0,1,1,2014,Professor of Mathematics,1,NA
+Amy,Mathematics,Mathematics,23,8.28571428571429,Vincent Goverse,0,0,1,2026,William W. Elliott Assistant Research Professor of Mathematics,0,NA
+Amy,Mathematics,Mathematics,46,8.28571428571429,Chad L Schoen,0,0,1,1982,Professor of Mathematics,1,NA
+Amy,Mathematics,Mathematics,57,8.28571428571429,Madi Yerlanov,0,0,1,2026,Phillip Griffiths Assistant Research Professor of Mathematics,0,NA
+Amy,Military & PE (pooled),Air Force ROTC,1,7.66666666666667,Bradley G Maxon,0,0,0,NA,"Commander, Visiting Professor in the Department of Aerospace Studies",0,NA
+Amy,Military & PE (pooled),Army ROTC,3,7.66666666666667,Avero Howard Jr,0,0,0,NA,Assistant Professor of Military Science,0,NA
+Amy,Military & PE (pooled),Navy ROTC,3,7.66666666666667,Shawn Davis,0,0,0,NA,Visiting Assistant Professor in the Department of Naval Science ROTC,0,NA
+Amy,Music,Music,2,9.28571428571429,Jonathan E. Bagg,0,0,0,NA,Professor of the Practice of Music,1,NA
+Amy,Music,Music,7,9.28571428571429,Laura Byrne,1,0,0,NA,Instructor of Music,0,NA
+Amy,Music,Music,8,9.28571428571429,Jennifer Chang,1,0,0,NA,Instructor of Music,0,NA
+Amy,Music,Music,26,9.28571428571429,Ieva Jokubaviciute,1,0,0,NA,Professor of the Practice of Music,1,NA
+Amy,Music,Music,32,9.28571428571429,Scott A. Lindroth,0,0,1,1991,Professor of Music,1,NA
+Amy,Music,Music,35,9.28571428571429,Randall M Love,0,0,0,NA,Associate Professor of the Practice Emeritus of Music,0,NA
+Amy,Music,Music,38,9.28571428571429,Verena Mösenbichler-Bryant,1,1,1,2009,Professor of the Practice of Music,1,NA
+Amy,Philosophy,Philosophy,7,9,Andrew Janiak,0,1,1,2001,Professor of Philosophy,1,NA
+Amy,Philosophy,Philosophy,17,9,Alfredo W Watkins,0,0,1,2021,Assistant Research Professor of Philosophy,0,NA
+Amy,Physics,Physics,1,8,Ayana T Arce,1,1,1,2006,Associate Professor of Physics,0,NA
+Amy,Physics,Physics,12,8,Sara Haravifard,1,0,1,2010,William M. Fairbank Associate Professor of Physics,1,NA
+Amy,Physics,Physics,16,8,Ashutosh V Kotwal,0,1,1,1995,Fritz London Distinguished Professor of Physics,1,NA
+Amy,Physics,Physics,29,8,Christoph F Schmidt,0,1,1,1988,Hertha Sponer Distinguished Professor of Physics,1,NA
+Amy,Physics,Physics,37,8,Anselm G Vossen,0,1,1,2008,Associate Professor in the Department of Physics,0,NA
+Amy,Political Science,Political Science,4,8,Scott de Marchi,0,1,NA,NA,Professor of Political Science,1,NA
+Amy,Political Science,Political Science,10,8,Jon Green,0,0,1,2020,Assistant Professor of Political Science,0,NA
+Amy,Political Science,Political Science,22,8,Paula D McClain,1,1,1,1977,James B. Duke Distinguished Professor of Political Science,1,NA
+Amy,Political Science,Political Science,28,8,David Siegel,0,1,1,2006,Professor of Political Science,1,NA
+Amy,Psychology & Neuroscience,Psychology & Neuroscience,2,8.2,Steven R Asher,0,0,1,1972,Professor of Psychology and Neuroscience,1,NA
+Amy,Psychology & Neuroscience,Psychology & Neuroscience,4,8.2,Staci D Bilbo,1,1,1,2003,Professor of Psychology and Neuroscience,1,NA
+Amy,Psychology & Neuroscience,Psychology & Neuroscience,23,8.2,Thomas Mark Newpher,0,0,1,2006,Associate Professor of the Practice of Psychology and Neuroscience,0,NA
+Amy,Psychology & Neuroscience,Psychology & Neuroscience,28,8.2,David Rabiner,0,0,1,1987,Research Professor Emeritus of Psychology and Neuroscience,1,NA
+Amy,Psychology & Neuroscience,Psychology & Neuroscience,32,8.2,Gregory Russell Samanez-Larkin,0,1,1,2010,Professor of Psychology and Neuroscience,1,NA
+Amy,Small languages (pooled),German Studies,6,8.33333333333333,Henry Pickford,0,0,1,2001,Professor of German Studies,1,NA
+Amy,Small languages (pooled),Romance Studies,3,8.33333333333333,Esther Gabara,1,0,1,2001,Professor of Romance Studies,1,NA
+Amy,Small languages (pooled),Slavic & Eurasian Studies,4,8.33333333333333,Jakob Norberg,0,0,1,2008,Professor of German Studies,1,NA
+Amy,Sociology,Sociology,15,8.33333333333333,Hedwig Eugenie Lee,1,1,1,2009,James B. Duke Distinguished Professor of Sociology,1,NA
+Amy,Sociology,Sociology,19,8.33333333333333,Jen'nan Read,1,0,1,2001,Professor of Sociology,1,NA
+Amy,Sociology,Sociology,22,8.33333333333333,Lynn Smith-Lovin,1,0,1,1978,Robert L. Wilson Distinguished Professor Emeritus of Sociology,1,NA
+Amy,Statistical Science,Statistical Science,18,8.66666666666667,Colin Rundel,0,0,1,2012,Associate Professor of the Practice of Statistical Science,0,NA
+Amy,Statistical Science,Statistical Science,19,8.66666666666667,Scott C Schmidler,0,1,1,2002,Associate Professor of Statistical Science,0,NA
+Amy,Statistical Science,Statistical Science,24,8.66666666666667,Alexander Volfovsky,0,1,1,2013,Associate Professor of Statistical Science,0,NA
+Amy,Thompson Writing Program,Thompson Writing Program,5,7.75,Laurel Burkbauer,1,0,0,NA,Instructor of the Writing and Rhetoric Program,0,NA
+Amy,Thompson Writing Program,Thompson Writing Program,10,7.75,Hannah Davis,1,0,1,2022,Senior Lecturer of the Writing and Rhetoric Program,0,NA
+Amy,Thompson Writing Program,Thompson Writing Program,13,7.75,Benjamin Hojem,0,0,1,2023,Lecturer of the Writing and Rhetoric Program,0,NA
+Amy,Thompson Writing Program,Thompson Writing Program,28,7.75,Margaret Swezey,1,0,1,2009,Instructor of the Writing and Rhetoric Program,0,NA
