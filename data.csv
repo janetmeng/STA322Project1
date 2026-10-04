@@ -1,54 +1,54 @@
 collector,stratum,department,roster_position,weight,name,female,ongoing_grant_2026,has_phd,phd_year,rank_title,full_professor,notes
-Janet,African & African American Studies,African & African American Studies,5,9,,,,,,,,
-Janet,African & African American Studies,African & African American Studies,7,9,,,,,,,,
-Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",1,9,,,,,,,,
-Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",2,9,,,,,,,,
-Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",10,9,,,,,,,,
-Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,1,9,,,,,,,,
-Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,5,9,,,,,,,,
-Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,25,9,,,,,,,,
-Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,29,9,,,,,,,,
-Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,44,9,,,,,,,,
-Janet,Biology,Biology,4,8.71428571428571,,,,,,,,
-Janet,Biology,Biology,24,8.71428571428571,,,,,,,,
-Janet,Biology,Biology,25,8.71428571428571,,,,,,,,
-Janet,Biology,Biology,35,8.71428571428571,,,,,,,,
-Janet,Biology,Biology,49,8.71428571428571,,,,,,,,
-Janet,Biology,Biology,51,8.71428571428571,,,,,,,,
-Janet,Biology,Biology,53,8.71428571428571,,,,,,,,
-Janet,Chemistry,Chemistry,4,9,,,,,,,,
-Janet,Chemistry,Chemistry,10,9,,,,,,,,
-Janet,Chemistry,Chemistry,13,9,,,,,,,,
-Janet,Classical & Religious Studies (pooled),Classical Studies,4,9,,,,,,,,
-Janet,Classical & Religious Studies (pooled),Religious Studies,3,9,,,,,,,,
-Janet,Classical & Religious Studies (pooled),Religious Studies,9,9,,,,,,,,
-Janet,Computer Science,Computer Science,1,9.5,,,,,,,,
-Janet,Computer Science,Computer Science,17,9.5,,,,,,,,
-Janet,Computer Science,Computer Science,20,9.5,,,,,,,,
-Janet,Computer Science,Computer Science,34,9.5,,,,,,,,
-Janet,Cultural Anthropology,Cultural Anthropology,13,8.5,,,,,,,,
-Janet,Cultural Anthropology,Cultural Anthropology,16,8.5,,,,,,,,
-Janet,Dance & Theater (pooled),Dance,5,9.33333333333333,,,,,,,,
-Janet,Dance & Theater (pooled),Theater Studies,13,9.33333333333333,,,,,,,,
-Janet,Dance & Theater (pooled),Theater Studies,20,9.33333333333333,,,,,,,,
-Janet,Economics,Economics,15,8.57142857142857,,,,,,,,
-Janet,Economics,Economics,18,8.57142857142857,,,,,,,,
-Janet,Economics,Economics,23,8.57142857142857,,,,,,,,
-Janet,Economics,Economics,27,8.57142857142857,,,,,,,,
-Janet,Economics,Economics,30,8.57142857142857,,,,,,,,
-Janet,Economics,Economics,40,8.57142857142857,,,,,,,,
-Janet,Economics,Economics,56,8.57142857142857,,,,,,,,
-Janet,Education & Gender Studies (pooled),Education,2,10,,,,,,,,
-Janet,Education & Gender Studies (pooled),"Gender, Sexuality & Feminist Studies",8,10,,,,,,,,
-Janet,English,English,12,8.25,,,,,,,,
-Janet,English,English,13,8.25,,,,,,,,
-Janet,English,English,16,8.25,,,,,,,,
-Janet,English,English,29,8.25,,,,,,,,
-Janet,Evolutionary Anthropology,Evolutionary Anthropology,4,8.5,,,,,,,,
-Janet,Evolutionary Anthropology,Evolutionary Anthropology,16,8.5,,,,,,,,
-Janet,History,History,7,9,,,,,,,,
-Janet,History,History,10,9,,,,,,,,
-Janet,History,History,12,9,,,,,,,,
+Janet,African & African American Studies,African & African American Studies,5,9,Kerry L. Haynie,0,0,1,1994,Professor of Political Science,1,Primary appt in Political Science; secondary in AAAS - possibly listed on 2 rosters
+Janet,African & African American Studies,African & African American Studies,7,9,Naiima I Khahaifa,1,0,1,2023,Assistant Professor of African & African American Studies,0,Sex coded from name - confirm with profile photo
+Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",1,9,Stanley Abe,0,0,1,1989,Professor of Art and Art History,1,NA
+Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",2,9,Dore Bowen,1,0,1,2004,"Research Professor of Art, Art History & Visual Studies",1,Research professor track; fellowships listed but no grants
+Janet,"Art, Art History & Visual Studies","Art, Art History & Visual Studies",10,9,Andrew Griebeler,0,0,1,2019,"Assistant Professor of Art, Art History & Visual Studies",0,Also Asst Prof of Religious Studies - possibly on 2 rosters
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,1,9,Badr Abdelfatta Badr,0,0,1,2014,Lecturing Fellow in the Department of Asian & Middle Eastern Studies,0,NA
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,5,9,Abbas Benmamoun,0,1,1,1992,Professor of Asian and Middle Eastern Studies,1,Profile headline is Vice Provost for Faculty Advancement; also Professor in Linguistics - possibly on 2 rosters
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,25,9,Satendra Khanna,0,0,1,1969,Associate Professor of the Practice Emeritus in the Department of Asian and Middle Eastern Studies,0,Emeritus
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,29,9,Kusum Knapczyk,1,0,1,2010,Senior Lecturer of Hindi Language of Asian and Middle Eastern Studies,0,NA
+Janet,Asian & Middle Eastern Studies,Asian & Middle Eastern Studies,44,9,Shasha Yang,1,0,0,NA,Instructor in the Department of Asian & Middle Eastern Studies,0,Sex not stated on profile - confirm with photo; highest degree M.A.
+Janet,Biology,Biology,4,8.71428571428571,Sherryl A. Broverman,1,0,1,1990,Professor of the Practice of Biology,1,NA
+Janet,Biology,Biology,24,8.71428571428571,Lara Marcia Linden-High,1,0,1,2017,Instructor B in the Department of Biology,0,NA
+Janet,Biology,Biology,25,8.71428571428571,Sara E Lipshutz,1,1,1,2018,Assistant Professor of Biology,0,NA
+Janet,Biology,Biology,35,8.71428571428571,H. Frederik Nijhout,0,0,1,1974,John Franklin Crowell Distinguished Professor of Biology,1,NA
+Janet,Biology,Biology,49,8.71428571428571,Nina Tang Sherwood,1,1,1,1998,Associate Professor of the Practice of Biology,0,Ongoing grants are training grants where she is listed as Mentor
+Janet,Biology,Biology,51,8.71428571428571,Eric P. Spana,0,0,1,1995,Associate Professor of the Practice Emeritus of Biology,0,Emeritus
+Janet,Biology,Biology,53,8.71428571428571,Tai-ping Sun,1,1,1,1987,John Carlisle Kilgo Distinguished Professor of Biology,1,Sex not stated on profile - confirm with photo
+Janet,Chemistry,Chemistry,4,9,Dorian Canelas,1,0,1,1997,Associate Professor of the Practice of Chemistry,0,Sex not stated on profile - confirm with photo
+Janet,Chemistry,Chemistry,10,9,Katherine J. Franz,1,1,1,2000,James B. Duke Distinguished Professor of Chemistry,1,NA
+Janet,Chemistry,Chemistry,13,9,Jie Liu,0,1,1,1996,George Barth Geller Distinguished Professor of Chemistry,1,NA
+Janet,Classical & Religious Studies (pooled),Classical Studies,4,9,Lauren Ginsberg,1,1,1,2011,Kiser Family Associate Professor of Classical Studies,0,Also Assoc Prof of Theater Studies and listed on Theater roster (2 listings)
+Janet,Classical & Religious Studies (pooled),Religious Studies,3,9,Mark Chaves,0,0,1,1991,Anne Firor Scott Distinguished Professor Emeritus of Sociology,1,Emeritus; primary dept Sociology - check if also on Sociology roster
+Janet,Classical & Religious Studies (pooled),Religious Studies,9,9,Mohsen Kadivar,0,0,1,1999,Research Professor in the Department of Religious Studies,1,Research professor track
+Janet,Computer Science,Computer Science,1,9.5,Pankaj K. Agarwal,0,0,NA,NA,RJR Nabisco Distinguished Professor of Computer Science in Trinity College of Arts and Sciences,1,No education section on Scholars; also Professor of Mathematics - check Math roster
+Janet,Computer Science,Computer Science,17,9.5,Kartik Nayak,0,1,1,2018,Associate Professor of Computer Science,0,NA
+Janet,Computer Science,Computer Science,20,9.5,Ronald Parr,0,NA,NA,NA,Professor of Computer Science,1,Profile features disabled by owner - no education or grant info
+Janet,Computer Science,Computer Science,34,9.5,Jun Yang,0,1,1,2001,Knut Schmidt Nielsen Distinguished Professor of Computer Science,1,NA
+Janet,Cultural Anthropology,Cultural Anthropology,13,8.5,Emily Rogers,1,0,1,NA,Assistant Professor of Cultural Anthropology,0,Bio says PhD from NYU but no year listed
+Janet,Cultural Anthropology,Cultural Anthropology,16,8.5,Rebecca L. Stein,1,1,1,1999,Professor of Cultural Anthropology,1,NA
+Janet,Dance & Theater (pooled),Dance,5,9.33333333333333,Ava LaVonne Vinesett,1,0,0,NA,Professor of the Practice of Dance,1,Highest degree M.F.A.
+Janet,Dance & Theater (pooled),Theater Studies,13,9.33333333333333,Jody McAuliffe,1,0,0,NA,Professor of the Practice of Theater Studies,1,Highest degree M.F.A.
+Janet,Dance & Theater (pooled),Theater Studies,20,9.33333333333333,Erika Weiberg,1,0,1,2016,Assistant Professor of Classical Studies,0,Primary dept Classical Studies and also on Classical roster (2 listings); degree listed as D.Phil. but bio says PhD
+Janet,Economics,Economics,15,8.57142857142857,Michael F Dinerstein,0,0,1,2015,Associate Professor of Economics,0,NA
+Janet,Economics,Economics,18,8.57142857142857,Connel Fullenkamp,0,0,1,1992,W.R. Huff Professor of the Practice of Economics,1,Most recent grant ended 2025
+Janet,Economics,Economics,23,8.57142857142857,Federico C Huneeus,0,1,1,2019,Assistant Professor of Economics,0,NA
+Janet,Economics,Economics,27,8.57142857142857,Matthias Kehrig,0,0,1,2011,Associate Professor of Economics,0,NA
+Janet,Economics,Economics,30,8.57142857142857,Lawrence Kreicher,0,0,1,1976,Associate Professor of the Practice of Economics,0,NA
+Janet,Economics,Economics,40,8.57142857142857,Ellen E Meade,1,0,1,1988,Research Professor of Economics,1,Research professor track
+Janet,Economics,Economics,56,8.57142857142857,Nelson B. Valente de Sa,0,0,1,2008,Associate Professor of the Practice of Economics,0,NA
+Janet,Education & Gender Studies (pooled),Education,2,10,Morgan Carney,NA,0,0,NA,Instructor in the Program in Education,0,Sex not stated on profile - check photo; highest degree M.Ed.
+Janet,Education & Gender Studies (pooled),"Gender, Sexuality & Feminist Studies",8,10,Alicia Nicki Washington,1,1,1,2005,Professor of the Practice of African & African American Studies,1,Roster now lists 9 names vs frame N=8; primary dept AAAS and also on AAAS roster (2 listings)
+Janet,English,English,12,8.25,Tsitsi Ella Jaji,1,0,1,2009,Helen L. Bevington Associate Professor of Modern Poetry,0,Also on AAAS roster (2 listings); Mellon grant ended 2025
+Janet,English,English,13,8.25,Douglas A Jones Jr.,0,0,1,2011,Professor of Theater Studies,1,Primary appt Theater Studies and also on Theater roster (2 listings)
+Janet,English,English,16,8.25,Stephanie Li,1,0,1,2005,Professor of African & African American Studies,1,Primary appt AAAS and also on AAAS roster (2 listings)
+Janet,English,English,29,8.25,Charlotte S. Sussman,1,0,1,1992,Professor of English,1,NA
+Janet,Evolutionary Anthropology,Evolutionary Anthropology,4,8.5,Steven E. Churchill,0,0,1,1994,Professor in the Department of Evolutionary Anthropology,1,Most recent grant ended 2024
+Janet,Evolutionary Anthropology,Evolutionary Anthropology,16,8.5,Anne Daphne Yoder,1,1,1,1992,Braxton Craven Distinguished Professor of Evolutionary Biology,1,Primary appt Biology and also on Biology roster (2 listings)
+Janet,History,History,7,9,Calvin Ryan Cheung-Miaw,0,0,1,2021,Cordelia and William Laverack Family Assistant Professor of History,0,NA
+Janet,History,History,10,9,Barry Gaspar,0,0,1,1974,Professor of History,1,Most recent grant (fellowship) ended 2024
+Janet,History,History,12,9,Malachi H. Hacohen,0,0,1,1993,Professor of History,1,NA
 Amy,Linguistics,Linguistics,7,10,Luciana Fellin,1,0,1,2001,Professor of the Practice of Romance Studies,1,NA
 Amy,Linguistics,Linguistics,14,10,Mary Osborne,1,0,0,NA,Lecturing Fellow in the Linguistics Program,0,NA
 Amy,Literature,Literature,14,8.5,Luciana Parisi,1,0,1,1999,Professor of Literature,1,NA
