@@ -117,26 +117,91 @@ svytotal(~one, svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
                          fpc = ~N_h, data = sample_ids))
 ```
 
-## Estimation (run after data collection)
+## Estimation
 
-Fill in `faculty_sample.csv` with one row per sampled faculty member: the columns of
-`sample_ids.csv` plus `female` (0/1), `ongoing_grant_2026` (0/1), `has_phd` (0/1),
-`phd_year` (blank if no PhD) and any Q4 variable. This section runs only once the file exists.
+Reads the collected data (`data.csv`). Emeriti are kept as drawn, since dropping them
+would change the selection probabilities. Missing values (a few faculty with no
+education or grant information on Scholars, or an unstated sex) are handled by
+estimating over the faculty with an observed value, using `subset()` on the design
+object so the variance still reflects the full stratified design.
 
-```{r estimate, eval=file.exists("faculty_sample.csv"), message=FALSE}
-dat <- read.csv("faculty_sample.csv")
+```{r estimate, message=FALSE}
+dat <- read.csv("data.csv", na.strings = c("NA", ""), stringsAsFactors = FALSE)
+stopifnot(all(dat$stratum %in% strata$stratum))
 dat$N_h <- strata$N_h[match(dat$stratum, strata$stratum)]
 dat$weight <- strata$weight[match(dat$stratum, strata$stratum)]
-dat$years_since_phd <- ifelse(dat$has_phd == 1, 2026 - dat$phd_year, NA)
+dat$years_since_phd <- ifelse(dat$has_phd %in% 1, 2026 - dat$phd_year, NA)
+dat$sex <- factor(dat$female, levels = c(0, 1), labels = c("Men", "Women"))
 des <- svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
                  fpc = ~N_h, data = dat)
 
-# Q1 and Q2: proportions with 95% CIs
-q1 <- svyciprop(~female, des);             q1; confint(q1)
-q2 <- svyciprop(~ongoing_grant_2026, des); q2; confint(q2)
+# Missing-data summary for the variables used
+colSums(is.na(dat[, c("female", "ongoing_grant_2026", "has_phd", "phd_year",
+                      "full_professor")]))
+```
 
-# Q3: mean among PhD holders only. subset() on the design object is the correct
-# domain estimator (a ratio estimate), not re-analyzing a separate sample.
-des_phd <- subset(des, has_phd == 1)
-q3 <- svymean(~years_since_phd, des_phd); q3; confint(q3)
+### Q1. Fraction of faculty who are women
+
+```{r q1}
+d1 <- subset(des, !is.na(female))
+q1 <- svyciprop(~female, d1)
+q1
+```
+
+### Q2. Fraction with at least one grant ongoing in 2026
+
+```{r q2}
+d2 <- subset(des, !is.na(ongoing_grant_2026))
+q2 <- svyciprop(~ongoing_grant_2026, d2)
+q2
+```
+
+### Q3. Average years since PhD among PhD holders
+
+`subset()` on the design gives the domain (ratio) estimator for the mean among
+PhD holders. Faculty with a PhD but no year listed are dropped from this estimate.
+
+```{r q3}
+d3 <- subset(des, has_phd %in% 1 & !is.na(years_since_phd))
+q3 <- svymean(~years_since_phd, d3)
+q3
+
+# Estimated fraction of faculty holding a PhD (for context)
+q3b <- svyciprop(~I(has_phd == 1), subset(des, !is.na(has_phd)))
+q3b
+```
+
+### Q4. Are women less likely than men to be full professors?
+
+`full_professor` is 1 for rank "Professor" (including Professor of the Practice,
+distinguished professors, and emeriti with that rank) and 0 otherwise.
+
+```{r q4}
+d4 <- subset(des, !is.na(female) & !is.na(full_professor))
+# fraction full professors overall and by sex
+q4_all <- svyciprop(~full_professor, d4)
+q4_all
+
+q4_by <- svyby(~full_professor, ~sex, d4, svymean, vartype = c("se", "ci"),
+                covmat = TRUE)
+q4_by
+# difference (women - men) and a design-based test of association
+svycontrast(q4_by, c(-1, 1))
+svychisq(~full_professor + sex, d4)
+```
+
+### Summary table
+
+```{r summary}
+est <- function(x, ci) c(Estimate = as.numeric(x), Lower = ci[1], Upper = ci[2])
+res <- rbind(
+  "Q1 Women" = est(q1, confint(q1)),
+  "Q2 Ongoing grant in 2026" = est(q2, confint(q2)),
+  "Q3 Years since PhD (PhD holders)" = est(q3, confint(q3)),
+  "Q4 Full professor (all)" = est(q4_all, confint(q4_all)),
+  "Q4 Full professor, women" = unlist(q4_by[2, c("full_professor", "ci_l", "ci_u")]),
+  "Q4 Full professor, men" = unlist(q4_by[1, c("full_professor", "ci_l", "ci_u")])
+)
+colnames(res) <- c("Estimate", "95% CI lower", "95% CI upper")
+knitr::kable(res, digits = 3)
 ```
