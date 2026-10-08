@@ -26,13 +26,13 @@ format:
       \setlist{itemsep=2pt, topsep=3pt, leftmargin=*}
       \setlength{\parskip}{4pt}
 execute:
-  echo: true
+  echo: false
   message: false
   warning: false
 ---
 
 ```{r}
-#| label: setup
+#| label: libraries
 #| include: false
 library(knitr)
 ```
