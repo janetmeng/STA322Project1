@@ -1,0 +1,57 @@
+---
+title: "STA 322 Project 1: Characteristics of Trinity College Faculty"
+author: "Janet Meng and Amy Duan"
+date: "October 9, 2026"
+format:
+  pdf:
+    documentclass: article
+    geometry: margin=0.75in
+    fontsize: 10pt
+    linestretch: 1
+    header-includes: |
+      \usepackage{titling}
+      \setlength{\droptitle}{-5em}
+      \pretitle{\centering\large\bfseries}
+      \posttitle{\par\vspace{0.3em}}
+      \preauthor{\centering\small}
+      \postauthor{\par\vspace{0.1em}}
+      \predate{\centering\small}
+      \postdate{\par\vspace{-0.5em}}
+      \usepackage{titlesec}
+      \titleformat*{\section}{\normalsize\bfseries}
+      \titlespacing*{\section}{0pt}{6pt}{2pt}
+      \usepackage{enumitem}
+      \setlist{nosep, leftmargin=*}
+      \setlength{\parskip}{3pt}
+---
+
+## Introduction
+
+This project uses a probability sample to estimate characteristics of faculty in Duke's Trinity College of Arts & Sciences: (1) the fraction who are women, (2) the fraction with at least one grant ongoing in 2026, (3) the average years since the Ph.D. among Ph.D. holders, and (4) whether the fraction who are full professors differs between women and men. Each estimate is reported with a 95% confidence interval. Because Question 1 is the primary target, we chose the design to estimate a proportion precisely while keeping data collection manageable for a two-person team.
+
+## Target Population and Sampling Frame
+
+The target population is everyone listed on the faculty web pages of Trinity's 36 departments and programs as of October 1, 2026. We used a department's "primary faculty" page where one exists and its full faculty listing otherwise (e.g., English, Theater Studies, Music, Religious Studies). The population therefore includes lecturers, instructors, research and practice faculty, ROTC cadre, and any emeriti still listed. Faculty with joint appointments may appear on several rosters and so have more than one chance of selection. As the instructor permitted, we kept these duplicates and treated each listing as a member of that department. Counting each roster by hand gave N = 866.
+
+## Survey Design
+
+We used **stratified simple random sampling without replacement with proportional allocation**, taking n = 100 (above the suggested minimum of 75). Each department is a stratum, except that units too small to receive two sampled faculty were pooled with related units: Classical & Religious Studies; Dance & Theater; Education & Gender, Sexuality & Feminist Studies; Small Languages (German, Romance, Slavic & Eurasian, International Comparative Studies); and Military & PE (three ROTC units plus Health, Wellness & PE). This gives 27 strata, with n_h ∝ N_h and largest-remainder rounding so the total is exactly 100. The reasoning behind these choices:
+
+- **Stratifying by department** improves precision, because the share of women and the prevalence of grants differ sharply across fields. The frame is already organized by department, so the stratum sizes N_h were easy to obtain.
+- **Proportional allocation.** We sampled each stratum in proportion to its size, so a department with twice as many faculty contributes twice as many sampled faculty. The main alternative, optimal allocation (where all costs are assumed to be equal), samples more heavily from strata whose responses are more variable. That requires knowing each stratum's variability before sampling, and we had no prior data or reliable proxy for it. For a yes/no outcome like Question 1, it would also gain little. Each stratum's variability depends only on its proportion of women, $p_h$, through the standard deviation $\sqrt{p_h(1-p_h)}$, which is similar across strata unless $p_h$ is close to 0 or 1. So optimal allocation would look much like proportional allocation. A further advantage is that every faculty member has nearly the same chance of selection, so the design is close to self-weighting: a faculty member in stratum $h$ is selected with probability $n_h/N_h$, and since proportional allocation sets $n_h = nN_h/N$, this equals $n/N$ in every stratum (we do round $n_h$ to a whole number). The sampling weights are therefore nearly equal, which keeps the variance added by unequal weighting small.
+
+- **Pooling** guarantees at least two units per stratum, which within-stratum variance estimation requires.
+- **No clustering or PPS.** Each faculty member has a separate Scholars@Duke profile, so sampling whole departments would save little time while inflating variance, and we had no size measure for individual faculty.
+
+With a sampling fraction of 100/866 ≈ 11.5%, the worst-case margin of error for a proportion is about ±9 percentage points before any stratification gain. All analyses use the design weights and a finite population correction.
+
+## Data Collection
+
+We drew roster positions in R (`set.seed(322)`). For pooled strata, positions ran through the member departments in a fixed order. Janet collected strata A–History and Amy the rest. From each person's Scholars@Duke profile we recorded:
+
+- **Sex:** from biography pronouns, otherwise from first name and photo.
+- **Ongoing grant in 2026:** 1 if any listed grant's award period overlaps 2026, regardless of role.
+- **Ph.D. status and year:** a D.Phil. counts as a Ph.D.; an M.F.A., M.Ed., etc. does not.
+- **Rank:** used to code full professor.
+
+Four missing Ph.D. years were taken from personal websites; other gaps were recorded as missing. One frame error: the Gender, Sexuality & Feminist Studies roster grew from 8 to 9 names between building the frame and collecting data.
