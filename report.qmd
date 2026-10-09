@@ -74,128 +74,16 @@ faculty to get two sampled people on its own. Units below this size were pooled 
 - **Small Languages:** German Studies, Romance Studies, Slavic & Eurasian Studies, International Comparative Studies
 - **Military & PE:** Air Force ROTC, Army ROTC, Navy ROTC, Health, Wellness & Physical Education
 
-We pooled related fields so that each pooled stratum is still fairly homogeneous, which preserves most of the benefit of stratification. Three departments (Cultural Anthropology, Evolutionary Anthropology, and Literature) have $N_h = 17$, just under the threshold, but each still received two units after rounding, so we kept them as separate strata.
-
-Two units per stratum is the minimum for design-based variance estimation: the sample variance $s_h^2 = \sum_{i=1}^{n_h}(y_{hi} - \bar{y}_h)^2/(n_h - 1)$ divides by $n_h - 1$, so it cannot be computed for a stratum with a single sampled unit.
+We pooled related fields so that each pooled stratum is still fairly homogeneous, which preserves most of the benefit of stratification. 
 
 ### Why stratify by department
 
-- **Precision.** The share of women and the prevalence of grants differ sharply across fields (for example, between the natural sciences and the humanities). When the stratum means $\bar{Y}_h$ are spread out, the within-stratum variances $S_h^2$ are small compared to the overall variance $S^2$, and stratified sampling has smaller variance than a simple random sample of the same size.
-- **Representation.** Every department is guaranteed to appear in the sample, so no field can be missed by chance.
-- **Convenience.** The frame is already organized by department, so the stratum sizes $N_h$ were easy to obtain by counting each roster, and sampling within a stratum only requires that department's page.
+We stratified by department mainly for precision. The share of women and the prevalence of grants differ sharply across fields, and when the stratum means $\bar{Y}_h$ are spread out, the within-stratum variances $S_h^2$ are small relative to $S^2$, so stratified sampling has smaller variance than a simple random sample of the same size. Stratifying also guarantees that every department appears in the sample, so no field can be missed by chance. Finally, it was convenient: the frame is already organized by department, so the stratum sizes $N_h$ came directly from counting each roster, and sampling within a stratum only requires that department's page.
 
 ### Allocation: why proportional allocation
 
-Under proportional allocation, each stratum's share of the sample matches its share of the population:
-$$\frac{n_h}{n} \approx \frac{N_h}{N}, \qquad \text{i.e.,} \qquad n_h \approx n \times \frac{N_h}{N}.$$
-A department with twice as many faculty contributes twice as many sampled faculty. Because $n N_h / N$ is rarely a whole number, we used **largest-remainder rounding**: round every $n_h$ down, then give the remaining units, one each, to the strata with the largest fractional parts, so the total is exactly 100.
+We allocated the sample proportionally, $n_h \approx nN_h/N$, rounding so the total is exactly 100. Proportional allocation guarantees $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$, because it removes the between-strata variation from the variance. Unlike optimal allocation, which needs the unknown $S_h$ and is tuned to a single variable, it requires only the stratum sizes $N_h$ and serves all four questions equally. It is also nearly self-weighting: every faculty member's selection probability is $\pi_i = n_h/N_h \approx n/N$, so the weights $1/\pi_i$ are nearly equal.
 
-Proportional allocation has several advantages for this survey:
-
-1. **It is never worse than simple random sampling, and usually better.** Under proportional allocation,
-$$\operatorname{Var}(\bar{y}_{HT}) = \left(1 - \frac{n}{N}\right)\frac{1}{n}\sum_{h=1}^{H}\frac{N_h}{N}S_h^2,$$
-while a simple random sample of the same size has $\operatorname{Var}(\bar{y}) = \left(1 - \frac{n}{N}\right)S^2/n$. The overall variance splits approximately into a within-strata and a between-strata part,
-$$S^2 \approx \sum_{h=1}^{H}\frac{N_h}{N}S_h^2 + \sum_{h=1}^{H}\frac{N_h}{N}\left(\bar{Y}_h - \bar{Y}\right)^2,$$
-so proportional allocation removes the between-strata term $\sum_h (N_h/N)(\bar{Y}_h - \bar{Y})^2$ from the variance, which gives $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$. For Question 1, this term is large when the fraction of women differs across departments, which we expect it does.
-
-2. **It requires no information we did not have.** The only inputs are the stratum sizes $N_h$, which we obtained by counting rosters. Optimal allocation also requires the within-stratum standard deviations $S_h$, and the cost-based version requires the per-unit costs $c_h$.
-
-3. **It serves all four questions at once.** Our survey estimates two proportions, a mean, and a comparison between groups. An allocation tuned to one variable may be poor for another, while proportional allocation does not favor any single question.
-
-4. **It is nearly self-weighting.** A design is self-weighting when every unit has the same probability of selection, so every sampled person counts equally in the estimates. A faculty member $i$ in stratum $h$ is selected with probability $\pi_i = n_h/N_h$, and since $n_h = n N_h/N$, this equals $n/N$ in every stratum. Rounding each $n_h$ to a whole number makes the probabilities only approximately equal, but the weights $1/\pi_i$ stay close together (see the table below), so unequal weighting adds very little variance.
-
-5. **It is simple and transparent.** The allocation is easy to compute, check, and explain, and mistakes in the design are easy to spot.
-
-### Alternatives we considered
-
-- **Simple random sampling (SRS) of all 866 faculty.** SRS would also give unbiased estimates, but by point 1 above it is less precise than proportionally allocated stratification, and a small department could be left out by chance.
-- **Optimal allocation.** Assuming equal costs for all units, the allocation that minimizes $\operatorname{Var}(\bar{y}_{HT})$ is
-$$n_h = n\,\frac{N_h S_h/N}{\sum_{h=1}^{H} N_h S_h/N},$$
-which samples more heavily from strata whose responses are more variable. This requires knowing each $S_h$ before sampling, and we had no prior data or reliable proxy for them. For Question 1 it would also gain little. For a 0/1 variable, $\bar{Y}_h$ is the proportion of women in stratum $h$, and the stratum's standard deviation depends only on that proportion: $S_h \approx \sqrt{\bar{Y}_h(1-\bar{Y}_h)}$. This value is similar across strata unless $\bar{Y}_h$ is close to 0 or 1 (for example, it is 0.50 at $\bar{Y}_h = 0.5$ and 0.46 at $\bar{Y}_h = 0.3$), so optimal allocation would assign sample sizes much like proportional allocation. It would also have to target one question, possibly at the expense of the others. The cost-based version was unnecessary because every Scholars@Duke profile takes about the same time to look up, so $c_h$ is roughly equal across strata.
-- **Equal allocation** (the same $n_h$ in every stratum). This is useful for comparing departments to each other, but it would oversample small departments and produce very unequal weights, which inflates the variance of college-wide estimates, our actual goal.
-- **Cluster sampling of departments.** Sampling whole departments would only save time if data collection were cheaper within a cluster. Here every faculty member has a separate Scholars@Duke profile, so the cost per person is the same either way. Meanwhile, faculty in the same department tend to resemble each other (for example, in sex composition and grant activity), so cluster sampling would inflate the variance. With only 36 departments, the number of sampled clusters would also be small.
-- **Probability proportional to size (PPS) sampling.** PPS selects units with probability proportional to a known size measure. Individual faculty have no natural size measure. A two-stage design (departments selected with PPS, then a fixed number of faculty within each) would also be self-weighting, but it is a cluster design and shares the variance cost described above. Since we had counts for every department, stratifying on all of them was both simpler and more precise.
-
-### Sample size
-
-We chose $n = 100$, comfortably above the suggested 75 and manageable to collect in a few hours each. We sample $n/N = 100/866 \approx 0.115$ of the population. Ignoring the gain from stratification, the worst-case margin of error for a proportion (when the proportion is 0.5, so $S^2 \approx 0.25$) is
-$$1.96\sqrt{\left(1 - \frac{n}{N}\right)\frac{S^2}{n}} = 1.96\sqrt{\left(1 - \frac{100}{866}\right)\frac{0.25}{100}} \approx 0.092,$$
-about $\pm 9$ percentage points. Stratification should make the actual intervals somewhat narrower.
-
-### Computing the allocation and weights
-
-Because we take a simple random sample within each stratum, faculty member $i$ in stratum $h$ has inclusion probability
-$$\pi_i = \Pr(I_i = 1) = \frac{n_h}{N_h},$$
-and their **design weight** is the inverse, $1/\pi_i = N_h/n_h$. The weight is the number of population faculty that each sampled person represents. The weights within a stratum sum to $N_h$, so across all strata $\sum_{i \in S} 1/\pi_i = N = 866$. Plugging these probabilities into the Horvitz-Thompson estimator gives the stratified estimators of the population total and mean:
-$$\hat{t}_y = \sum_{i \in S}\frac{y_{hi}}{\pi_i} = \sum_{h=1}^{H} N_h\,\bar{y}_h, \qquad \bar{y}_{HT} = \frac{\hat{t}_y}{N} = \sum_{h=1}^{H}\frac{N_h}{N}\,\bar{y}_h.$$
-Each stratum's sample mean $\bar{y}_h$ is weighted by that stratum's share of the population. For a 0/1 variable such as sex, $\bar{y}_h$ is the sample proportion in stratum $h$, and $\bar{y}_{HT}$ estimates the population proportion. Because $\hat{t}_y$ is a Horvitz-Thompson estimator, it is unbiased.
-
-The code below computes the strata, the allocation, and the weights from our roster counts.
-
-```{r}
-#| label: allocation
-frame <- read.csv("faculty_counts.csv", stringsAsFactors = FALSE)
-N <- sum(frame$total_faculty)
-n <- 100
-
-# Pool units too small to receive 2 sampled faculty on their own
-pool <- list(
-  "Military & PE (pooled)" = c("Air Force ROTC", "Army ROTC", "Navy ROTC",
-                               "Health, Wellness & Physical Education"),
-  "Small languages (pooled)" = c("International Comparative Studies",
-                                 "Slavic & Eurasian Studies", "Romance Studies",
-                                 "German Studies"),
-  "Dance & Theater (pooled)" = c("Dance", "Theater Studies"),
-  "Education & Gender Studies (pooled)" = c("Education",
-                                            "Gender, Sexuality & Feminist Studies"),
-  "Classical & Religious Studies (pooled)" = c("Classical Studies",
-                                               "Religious Studies")
-)
-frame$stratum <- frame$department
-for (s in names(pool)) frame$stratum[frame$department %in% pool[[s]]] <- s
-
-strata <- aggregate(total_faculty ~ stratum, data = frame, FUN = sum)
-names(strata)[2] <- "N_h"
-
-# Proportional allocation with largest-remainder rounding
-strata$exact <- n * strata$N_h / N
-strata$n_h <- floor(strata$exact)
-short <- n - sum(strata$n_h)
-bump <- order(strata$exact - strata$n_h, decreasing = TRUE)[seq_len(short)]
-strata$n_h[bump] <- strata$n_h[bump] + 1
-
-# Inclusion probabilities and design weights
-strata$pi <- strata$n_h / strata$N_h
-strata$weight <- strata$N_h / strata$n_h
-
-stopifnot(sum(strata$n_h) == n, all(strata$n_h >= 2),
-          isTRUE(all.equal(sum(strata$n_h * strata$weight), N)))
-```
-
-```{r}
-#| label: alloc-table
-#| echo: false
-kable(strata[order(strata$stratum),
-             c("stratum", "N_h", "exact", "n_h", "pi", "weight")],
-      row.names = FALSE, digits = c(0, 0, 2, 0, 3, 2),
-      col.names = c("Stratum", "$N_h$", "$nN_h/N$", "$n_h$",
-                    "$\\pi_i = n_h/N_h$", "$1/\\pi_i = N_h/n_h$"),
-      caption = "Proportional allocation and design weights by stratum")
-```
-
-The table shows the result. The 27 strata have $n_h$ between `r min(strata$n_h)` and `r max(strata$n_h)`, and the weights range from `r round(min(strata$weight), 2)` to `r round(max(strata$weight), 2)`, close to the overall $N/n = `r round(N/n, 2)`$. Rounding is the only source of the differences: strata rounded down (e.g., Education & Gender Studies, $2.31 \to 2$) have slightly larger weights, and strata rounded up (e.g., Military & PE, $2.66 \to 3$) have slightly smaller ones.
-
-### Estimation and variance
-
-Because we take separate simple random samples in each stratum, the $\bar{y}_h$ are independent, and the variance of $\bar{y}_{HT}$ is
-$$\operatorname{Var}(\bar{y}_{HT}) = \sum_{h=1}^{H}\frac{N_h^2}{N^2}\left(1 - \frac{n_h}{N_h}\right)\frac{S_h^2}{n_h}, \qquad S_h^2 = \sum_{i=1}^{N_h}\frac{(y_{hi} - \bar{Y}_h)^2}{N_h - 1}.$$
-We estimate each $S_h^2$ with the sample variance $s_h^2$, giving
-$$\widehat{\operatorname{Var}}(\bar{y}_{HT}) = \sum_{h=1}^{H}\frac{N_h^2}{N^2}\left(1 - \frac{n_h}{N_h}\right)\frac{s_h^2}{n_h},$$
-and the 95% confidence interval $\bar{y}_{HT} \pm 1.96\sqrt{\widehat{\operatorname{Var}}(\bar{y}_{HT})}$. For a 0/1 variable, $s_h^2 = n_h\,\bar{y}_h(1-\bar{y}_h)/(n_h - 1)$.
-
-Two parts of this formula shaped the design. The factor $1 - n_h/N_h$ is the **finite population correction**. We sample about 11.5% of each stratum without replacement, so this factor reduces the variance by about that much, and leaving it out would overstate our uncertainty. The divisor $n_h - 1$ in $s_h^2$ is why every stratum needs at least two sampled units.
-
-Question 3 (average years since Ph.D. among Ph.D. holders) is a **domain estimate**: the number of Ph.D. holders in each stratum is not known in advance, so the estimate is a ratio of two estimated totals. We compute it by restricting the full design object to Ph.D. holders, which keeps the correct stratified variance.
 
 ### Implementing the design in R
 
@@ -240,38 +128,7 @@ For each sampled person we recorded the following from their Scholars@Duke profi
 - **Roster changes.** The Gender, Sexuality & Feminist Studies page listed 8 faculty when we built the frame and 9 when we collected data. We used the person at the sampled position on the current page and treat this as a minor frame error.
 - **Multiple listings.** Several sampled faculty also appear on another department's roster (for example, faculty with joint appointments in African & African American Studies or Theater Studies). As permitted for this project, we did not adjust their weights. Because these faculty had a higher chance of selection, any characteristic associated with joint appointments may be slightly overrepresented in our estimates.
 
-## from before
 
-## Introduction
-
-This project uses a probability sample to estimate characteristics of faculty in Duke's Trinity College of Arts & Sciences: (1) the fraction who are women, (2) the fraction with at least one grant ongoing in 2026, (3) the average years since the Ph.D. among Ph.D. holders, and (4) whether the fraction who are full professors differs between women and men. Each estimate is reported with a 95% confidence interval. Because Question 1 is the primary target, we chose the design to estimate a proportion precisely while keeping data collection manageable for a two-person team.
-
-## Target Population and Sampling Frame
-
-The target population is everyone listed on the faculty web pages of Trinity's 36 departments and programs as of October 1, 2026. We used a department's "primary faculty" page where one exists and its full faculty listing otherwise (e.g., English, Theater Studies, Music, Religious Studies). The population therefore includes lecturers, instructors, research and practice faculty, ROTC cadre, and any emeriti still listed. Faculty with joint appointments may appear on several rosters and so have more than one chance of selection. As the instructor permitted, we kept these duplicates and treated each listing as a member of that department. Counting each roster by hand gave N = 866.
-
-## Survey Design
-
-We used **stratified simple random sampling without replacement with proportional allocation**, taking n = 100 (above the suggested minimum of 75). Each department is a stratum, except that units too small to receive two sampled faculty were pooled with related units: Classical & Religious Studies; Dance & Theater; Education & Gender, Sexuality & Feminist Studies; Small Languages (German, Romance, Slavic & Eurasian, International Comparative Studies); and Military & PE (three ROTC units plus Health, Wellness & PE). This gives 27 strata, with n_h ∝ N_h and largest-remainder rounding so the total is exactly 100. The reasoning behind these choices:
-
-- **Stratifying by department** improves precision, because the share of women and the prevalence of grants differ sharply across fields. The frame is already organized by department, so the stratum sizes N_h were easy to obtain.
-- **Proportional allocation.** We sampled each stratum in proportion to its size, so a department with twice as many faculty contributes twice as many sampled faculty. The main alternative, optimal allocation (where all costs are assumed to be equal), samples more heavily from strata whose responses are more variable. That requires knowing each stratum's variability before sampling, and we had no prior data or reliable proxy for it. For a yes/no outcome like Question 1, it would also gain little. Each stratum's variability depends only on its proportion of women, $p_h$, through the standard deviation $\sqrt{p_h(1-p_h)}$, which is similar across strata unless $p_h$ is close to 0 or 1. So optimal allocation would look much like proportional allocation. A further advantage is that every faculty member has nearly the same chance of selection, so the design is close to self-weighting: a faculty member in stratum $h$ is selected with probability $n_h/N_h$, and since proportional allocation sets $n_h = nN_h/N$, this equals $n/N$ in every stratum (we do round $n_h$ to a whole number). The sampling weights are therefore nearly equal, which keeps the variance added by unequal weighting small.
-
-- **Pooling** guarantees at least two units per stratum, which within-stratum variance estimation requires.
-- **No clustering or PPS.** Each faculty member has a separate Scholars@Duke profile, so sampling whole departments would save little time while inflating variance, and we had no size measure for individual faculty.
-
-With a sampling fraction of 100/866 ≈ 11.5%, the worst-case margin of error for a proportion is about ±9 percentage points before any stratification gain. All analyses use the design weights and a finite population correction.
-
-## Data Collection
-
-We drew roster positions in R (`set.seed(322)`). For pooled strata, positions ran through the member departments in a fixed order. Janet collected strata A–History and Amy the rest. From each person's Scholars@Duke profile we recorded:
-
-- **Sex:** from biography pronouns, otherwise from first name and photo.
-- **Ongoing grant in 2026:** 1 if any listed grant's award period overlaps 2026, regardless of role.
-- **Ph.D. status and year:** a D.Phil. counts as a Ph.D.; an M.F.A., M.Ed., etc. does not.
-- **Rank:** used to code full professor.
-
-Four missing Ph.D. years were taken from personal websites; other gaps were recorded as missing. One frame error: the Gender, Sexuality & Feminist Studies roster grew from 8 to 9 names between building the frame and collecting data.
 
 ```{r setup, include=FALSE}
 library(survey)
@@ -430,5 +287,92 @@ As a check on the two judgment calls above (not included in conclusion), the tab
 ## Conclusion
 
 We used a stratified simple random sample of 100 faculty, allocated in proportion to department size, to estimate characteristics of Trinity College faculty. We estimate that about `r pct(q1, 0)` of faculty are women (95% CI: `r ci_pct(q1_ci)`), that about `r pct(q2, 0)` have a grant ongoing in 2026 (95% CI: `r ci_pct(q2_ci)`), and that Ph.D. holders earned their degree an average of `r sprintf("%.0f", coef(q3))` years ago (95% CI: `r sprintf("%.1f to %.1f", q3_ci[1], q3_ci[2])`). For our additional question, the share of full professors is nearly identical for women (`r pct(q4_by$full_professor[2], 0)`) and men (`r pct(q4_by$full_professor[1], 0)`), with no statistically detectable difference, although the sample is too small to rule out a moderate one.The main limits are the width of the intervals at n = 100, the hand-coded sex and grant variables, and duplicate roster listings. With more time we would increase the sample, run a pilot to estimate department-level variability for optimal allocation, and measure rank more finely and adjust for years since the Ph.D. to learn whether women and men differ in rank once seniority is accounted for.
+
+
+\newpage
+
+## Appendix
+
+
+### Sample size
+
+We chose $n = 100$, comfortably above the suggested 75 and manageable to collect in a few hours each. We sample $n/N = 100/866 \approx 0.115$ of the population. Ignoring the gain from stratification, the worst-case margin of error for a proportion (when the proportion is 0.5, so $S^2 \approx 0.25$) is
+$$1.96\sqrt{\left(1 - \frac{n}{N}\right)\frac{S^2}{n}} = 1.96\sqrt{\left(1 - \frac{100}{866}\right)\frac{0.25}{100}} \approx 0.092,$$
+about $\pm 9$ percentage points. Stratification should make the actual intervals somewhat narrower.
+
+### Computing the allocation and weights
+
+Because we take a simple random sample within each stratum, faculty member $i$ in stratum $h$ has inclusion probability
+$$\pi_i = \Pr(I_i = 1) = \frac{n_h}{N_h},$$
+and their **design weight** is the inverse, $1/\pi_i = N_h/n_h$. The weight is the number of population faculty that each sampled person represents. The weights within a stratum sum to $N_h$, so across all strata $\sum_{i \in S} 1/\pi_i = N = 866$. Plugging these probabilities into the Horvitz-Thompson estimator gives the stratified estimators of the population total and mean:
+$$\hat{t}_y = \sum_{i \in S}\frac{y_{hi}}{\pi_i} = \sum_{h=1}^{H} N_h\,\bar{y}_h, \qquad \bar{y}_{HT} = \frac{\hat{t}_y}{N} = \sum_{h=1}^{H}\frac{N_h}{N}\,\bar{y}_h.$$
+Each stratum's sample mean $\bar{y}_h$ is weighted by that stratum's share of the population. For a 0/1 variable such as sex, $\bar{y}_h$ is the sample proportion in stratum $h$, and $\bar{y}_{HT}$ estimates the population proportion. Because $\hat{t}_y$ is a Horvitz-Thompson estimator, it is unbiased.
+
+The code below computes the strata, the allocation, and the weights from our roster counts.
+
+```{r}
+#| label: allocation
+frame <- read.csv("faculty_counts.csv", stringsAsFactors = FALSE)
+N <- sum(frame$total_faculty)
+n <- 100
+
+# Pool units too small to receive 2 sampled faculty on their own
+pool <- list(
+  "Military & PE (pooled)" = c("Air Force ROTC", "Army ROTC", "Navy ROTC",
+                               "Health, Wellness & Physical Education"),
+  "Small languages (pooled)" = c("International Comparative Studies",
+                                 "Slavic & Eurasian Studies", "Romance Studies",
+                                 "German Studies"),
+  "Dance & Theater (pooled)" = c("Dance", "Theater Studies"),
+  "Education & Gender Studies (pooled)" = c("Education",
+                                            "Gender, Sexuality & Feminist Studies"),
+  "Classical & Religious Studies (pooled)" = c("Classical Studies",
+                                               "Religious Studies")
+)
+frame$stratum <- frame$department
+for (s in names(pool)) frame$stratum[frame$department %in% pool[[s]]] <- s
+
+strata <- aggregate(total_faculty ~ stratum, data = frame, FUN = sum)
+names(strata)[2] <- "N_h"
+
+# Proportional allocation with largest-remainder rounding
+strata$exact <- n * strata$N_h / N
+strata$n_h <- floor(strata$exact)
+short <- n - sum(strata$n_h)
+bump <- order(strata$exact - strata$n_h, decreasing = TRUE)[seq_len(short)]
+strata$n_h[bump] <- strata$n_h[bump] + 1
+
+# Inclusion probabilities and design weights
+strata$pi <- strata$n_h / strata$N_h
+strata$weight <- strata$N_h / strata$n_h
+
+stopifnot(sum(strata$n_h) == n, all(strata$n_h >= 2),
+          isTRUE(all.equal(sum(strata$n_h * strata$weight), N)))
+```
+
+```{r}
+#| label: alloc-table
+#| echo: false
+kable(strata[order(strata$stratum),
+             c("stratum", "N_h", "exact", "n_h", "pi", "weight")],
+      row.names = FALSE, digits = c(0, 0, 2, 0, 3, 2),
+      col.names = c("Stratum", "$N_h$", "$nN_h/N$", "$n_h$",
+                    "$\\pi_i = n_h/N_h$", "$1/\\pi_i = N_h/n_h$"),
+      caption = "Proportional allocation and design weights by stratum")
+```
+
+The table shows the result. The 27 strata have $n_h$ between `r min(strata$n_h)` and `r max(strata$n_h)`, and the weights range from `r round(min(strata$weight), 2)` to `r round(max(strata$weight), 2)`, close to the overall $N/n = `r round(N/n, 2)`$. Rounding is the only source of the differences: strata rounded down (e.g., Education & Gender Studies, $2.31 \to 2$) have slightly larger weights, and strata rounded up (e.g., Military & PE, $2.66 \to 3$) have slightly smaller ones.
+
+### Estimation and variance
+
+Because we take separate simple random samples in each stratum, the $\bar{y}_h$ are independent, and the variance of $\bar{y}_{HT}$ is
+$$\operatorname{Var}(\bar{y}_{HT}) = \sum_{h=1}^{H}\frac{N_h^2}{N^2}\left(1 - \frac{n_h}{N_h}\right)\frac{S_h^2}{n_h}, \qquad S_h^2 = \sum_{i=1}^{N_h}\frac{(y_{hi} - \bar{Y}_h)^2}{N_h - 1}.$$
+We estimate each $S_h^2$ with the sample variance $s_h^2$, giving
+$$\widehat{\operatorname{Var}}(\bar{y}_{HT}) = \sum_{h=1}^{H}\frac{N_h^2}{N^2}\left(1 - \frac{n_h}{N_h}\right)\frac{s_h^2}{n_h},$$
+and the 95% confidence interval $\bar{y}_{HT} \pm 1.96\sqrt{\widehat{\operatorname{Var}}(\bar{y}_{HT})}$. For a 0/1 variable, $s_h^2 = n_h\,\bar{y}_h(1-\bar{y}_h)/(n_h - 1)$.
+
+Two parts of this formula shaped the design. The factor $1 - n_h/N_h$ is the **finite population correction**. We sample about 11.5% of each stratum without replacement, so this factor reduces the variance by about that much, and leaving it out would overstate our uncertainty. The divisor $n_h - 1$ in $s_h^2$ is why every stratum needs at least two sampled units.
+
+Question 3 (average years since Ph.D. among Ph.D. holders) is a **domain estimate**: the number of Ph.D. holders in each stratum is not known in advance, so the estimate is a ratio of two estimated totals. We compute it by restricting the full design object to Ph.D. holders, which keeps the correct stratified variance.
 
 
