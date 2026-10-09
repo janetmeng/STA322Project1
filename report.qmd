@@ -60,7 +60,9 @@ We built the frame by counting each roster by hand and recording, for each unit,
 
 ### Overview
 
-We used **stratified simple random sampling without replacement with proportional allocation**, with a total sample size of $n = 100$ (above the suggested minimum of 75). The population is partitioned into $H = 27$ strata: departments, with a few very small units pooled (explained below). Within each stratum $h$ we selected a simple random sample of $n_h$ roster positions out of the $N_h$ faculty listed.
+We used **stratified simple random sampling without replacement with proportional allocation**, with a total sample size of $n = 100$ (above the suggested minimum of 75). The population is partitioned into $H = 27$ strata: departments, with a few very small units pooled (explained below). Within each stratum $h$ we selected a simple random sample of $n_h$ roster positions out of the $N_h$ faculty listed. 
+
+The sample-size calculation, the full allocation table, and the derivation of the weights and variance estimator are given in the Appendix.
 
 ### Defining the strata
 
@@ -84,6 +86,7 @@ We stratified by department mainly for precision. The share of women and the pre
 
 We allocated the sample proportionally, $n_h \approx nN_h/N$, rounding so the total is exactly 100. Proportional allocation guarantees $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$, because it removes the between-strata variation from the variance. Unlike optimal allocation, which needs the unknown $S_h$ and is tuned to a single variable, it requires only the stratum sizes $N_h$ and serves all four questions equally. It is also nearly self-weighting: every faculty member's selection probability is $\pi_i = n_h/N_h \approx n/N$, so the weights $1/\pi_i$ are nearly equal.
 
+The resulting $n_h$, inclusion probabilities, and weights for all 27 strata are listed in Appendix B.
 
 ### Implementing the design in R
 
@@ -102,13 +105,13 @@ des <- svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
                  fpc = ~N_h, data = dat)
 ```
 
-As a check, the estimated total of a variable equal to 1 for everyone, `svytotal(~one, des)`, equals $\sum_{i \in S} 1/\pi_i = 866$, the frame size. Results for each question are in the Analysis section.
+As a check, the estimated total of a variable equal to 1 for everyone, `svytotal(~one, des)`, equals $\sum_{i \in S} 1/\pi_i = 866$, the frame size. The estimator and variance formula that `survey` computes from these inputs are derived in Appendix C, and the full code is in Appendix D. Results for each question are in the Analysis section.
 
 ## Data Collection
 
 ### Drawing the sample
 
-We drew the sample in R with `set.seed(322)` so it can be reproduced exactly. In each stratum $h$ we selected $n_h$ distinct roster positions at random from $1, \dots, N_h$. In pooled strata, positions run through the member departments in a fixed order (for example, in Dance & Theater, positions 1 to 7 are Dance and 8 to 28 are Theater Studies), and each position was mapped back to a department and a position on that department's page. The sampled person is the name at that position, counting down the page in the order shown on the website.
+We drew the sample in R with `set.seed(322)` so it can be reproduced exactly. In each stratum $h$ we selected $n_h$ distinct roster positions at random from $1, \dots, N_h$. In pooled strata, positions run through the member departments in a fixed order (for example, in Dance & Theater, positions 1 to 7 are Dance and 8 to 28 are Theater Studies), and each position was mapped back to a department and a position on that department's page. The sampled person is the name at that position, counting down the page in the order shown on the website. The sampling code is reproduced in Appendix D.
 
 We divided collection by stratum: Janet collected the strata from African & African American Studies through History, and Amy collected the remaining strata.
 
@@ -214,6 +217,8 @@ Rather than impute, each estimate uses the sampled faculty who have the variable
 
 ## Results and Analysis
 
+All estimates below use the design weights and the stratified Horvitz-Thompson estimator with the finite population correction (Appendix C). Proportions are estimated with `svyciprop`, and the mean in Question 3 with `svymean` on the subset of Ph.D. holders.
+
 ```{r results-table}
 res <- data.frame(
   Question = c("1. Women", "2. Ongoing grant in 2026",
@@ -293,25 +298,23 @@ We used a stratified simple random sample of 100 faculty, allocated in proportio
 
 ## Appendix
 
-
-### Sample size
+### A. Sample size
 
 We chose $n = 100$, comfortably above the suggested 75 and manageable to collect in a few hours each. We sample $n/N = 100/866 \approx 0.115$ of the population. Ignoring the gain from stratification, the worst-case margin of error for a proportion (when the proportion is 0.5, so $S^2 \approx 0.25$) is
 $$1.96\sqrt{\left(1 - \frac{n}{N}\right)\frac{S^2}{n}} = 1.96\sqrt{\left(1 - \frac{100}{866}\right)\frac{0.25}{100}} \approx 0.092,$$
 about $\pm 9$ percentage points. Stratification should make the actual intervals somewhat narrower.
 
-### Computing the allocation and weights
+### B. Allocation and weights
 
 Because we take a simple random sample within each stratum, faculty member $i$ in stratum $h$ has inclusion probability
 $$\pi_i = \Pr(I_i = 1) = \frac{n_h}{N_h},$$
-and their **design weight** is the inverse, $1/\pi_i = N_h/n_h$. The weight is the number of population faculty that each sampled person represents. The weights within a stratum sum to $N_h$, so across all strata $\sum_{i \in S} 1/\pi_i = N = 866$. Plugging these probabilities into the Horvitz-Thompson estimator gives the stratified estimators of the population total and mean:
-$$\hat{t}_y = \sum_{i \in S}\frac{y_{hi}}{\pi_i} = \sum_{h=1}^{H} N_h\,\bar{y}_h, \qquad \bar{y}_{HT} = \frac{\hat{t}_y}{N} = \sum_{h=1}^{H}\frac{N_h}{N}\,\bar{y}_h.$$
-Each stratum's sample mean $\bar{y}_h$ is weighted by that stratum's share of the population. For a 0/1 variable such as sex, $\bar{y}_h$ is the sample proportion in stratum $h$, and $\bar{y}_{HT}$ estimates the population proportion. Because $\hat{t}_y$ is a Horvitz-Thompson estimator, it is unbiased.
+and their **design weight** is the inverse, $1/\pi_i = N_h/n_h$. The weight is the number of population faculty that each sampled person represents. The weights within a stratum sum to $N_h$, so across all strata $\sum_{i \in S} 1/\pi_i = N = 866$.
 
-The code below computes the strata, the allocation, and the weights from our roster counts.
+Under proportional allocation, $n_h \approx nN_h/N$. Because $nN_h/N$ is rarely a whole number, we used largest-remainder rounding: round every $n_h$ down, then give the remaining units, one each, to the strata with the largest fractional parts, so the total is exactly 100. The code below computes the strata, the allocation, and the weights from our roster counts.
 
 ```{r}
 #| label: allocation
+#| echo: true
 frame <- read.csv("faculty_counts.csv", stringsAsFactors = FALSE)
 N <- sum(frame$total_faculty)
 n <- 100
@@ -352,7 +355,6 @@ stopifnot(sum(strata$n_h) == n, all(strata$n_h >= 2),
 
 ```{r}
 #| label: alloc-table
-#| echo: false
 kable(strata[order(strata$stratum),
              c("stratum", "N_h", "exact", "n_h", "pi", "weight")],
       row.names = FALSE, digits = c(0, 0, 2, 0, 3, 2),
@@ -361,9 +363,13 @@ kable(strata[order(strata$stratum),
       caption = "Proportional allocation and design weights by stratum")
 ```
 
-The table shows the result. The 27 strata have $n_h$ between `r min(strata$n_h)` and `r max(strata$n_h)`, and the weights range from `r round(min(strata$weight), 2)` to `r round(max(strata$weight), 2)`, close to the overall $N/n = `r round(N/n, 2)`$. Rounding is the only source of the differences: strata rounded down (e.g., Education & Gender Studies, $2.31 \to 2$) have slightly larger weights, and strata rounded up (e.g., Military & PE, $2.66 \to 3$) have slightly smaller ones.
+The 27 strata have $n_h$ between `r min(strata$n_h)` and `r max(strata$n_h)`, and the weights range from `r round(min(strata$weight), 2)` to `r round(max(strata$weight), 2)`, close to the overall $N/n = `r round(N/n, 2)`$. Rounding is the only source of the differences: strata rounded down (e.g., Education & Gender Studies, $2.31 \to 2$) have slightly larger weights, and strata rounded up (e.g., Military & PE, $2.66 \to 3$) have slightly smaller ones.
 
-### Estimation and variance
+### C. Estimation and variance
+
+Plugging the inclusion probabilities into the Horvitz-Thompson estimator gives the stratified estimators of the population total and mean:
+$$\hat{t}_y = \sum_{i \in S}\frac{y_{hi}}{\pi_i} = \sum_{h=1}^{H} N_h\,\bar{y}_h, \qquad \bar{y}_{HT} = \frac{\hat{t}_y}{N} = \sum_{h=1}^{H}\frac{N_h}{N}\,\bar{y}_h.$$
+Each stratum's sample mean $\bar{y}_h$ is weighted by that stratum's share of the population. For a 0/1 variable such as sex, $\bar{y}_h$ is the sample proportion in stratum $h$, and $\bar{y}_{HT}$ estimates the population proportion. Because $\hat{t}_y$ is a Horvitz-Thompson estimator, it is unbiased.
 
 Because we take separate simple random samples in each stratum, the $\bar{y}_h$ are independent, and the variance of $\bar{y}_{HT}$ is
 $$\operatorname{Var}(\bar{y}_{HT}) = \sum_{h=1}^{H}\frac{N_h^2}{N^2}\left(1 - \frac{n_h}{N_h}\right)\frac{S_h^2}{n_h}, \qquad S_h^2 = \sum_{i=1}^{N_h}\frac{(y_{hi} - \bar{Y}_h)^2}{N_h - 1}.$$
@@ -375,4 +381,32 @@ Two parts of this formula shaped the design. The factor $1 - n_h/N_h$ is the **f
 
 Question 3 (average years since Ph.D. among Ph.D. holders) is a **domain estimate**: the number of Ph.D. holders in each stratum is not known in advance, so the estimate is a ratio of two estimated totals. We compute it by restricting the full design object to Ph.D. holders, which keeps the correct stratified variance.
 
+### D. Code
 
+**Drawing the sample.** This code drew the roster positions used for data collection. It is shown, not re-run, so the report does not overwrite the sample file.
+
+```{r}
+#| label: draw-sample
+#| echo: true
+#| eval: false
+set.seed(322)
+rows <- list()
+for (i in seq_len(nrow(strata))) {
+  s <- strata$stratum[i]
+  members <- frame[frame$stratum == s, ]
+  pos <- sort(sample(strata$N_h[i], strata$n_h[i]))
+  ends <- cumsum(members$total_faculty)
+  starts <- ends - members$total_faculty
+  idx <- findInterval(pos - 1, ends) + 1
+  rows[[i]] <- data.frame(stratum = s, department = members$department[idx],
+                          roster_position = pos - starts[idx])
+}
+sample_ids <- do.call(rbind, rows)
+sample_ids$weight <- strata$weight[match(sample_ids$stratum, strata$stratum)]
+write.csv(sample_ids, "sample_ids.csv", row.names = FALSE)
+```
+
+**Analysis.** The code that builds the design object and computes every estimate in the Results section:
+
+```{r ref.label=c("setup", "results-table", "figure", "sensitivity-table"), echo=TRUE, eval=FALSE}
+```
