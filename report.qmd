@@ -5,23 +5,26 @@ date: "October 9, 2026"
 format:
   pdf:
     documentclass: article
+    shift-heading-level-by: -1
     geometry: margin=0.9in
     fontsize: 11pt
     linestretch: 1.05
     header-includes: |
       \usepackage{titling}
       \setlength{\droptitle}{-4em}
-      \pretitle{\centering\large\bfseries}
-      \posttitle{\par\vspace{0.3em}}
-      \preauthor{\centering\small}
+      \pretitle{\centering\LARGE\bfseries}
+      \posttitle{\par\vspace{0.4em}}
+      \preauthor{\centering\normalsize}
       \postauthor{\par\vspace{0.1em}}
-      \predate{\centering\small}
-      \postdate{\par\vspace{-0.3em}}
+      \predate{\centering\normalsize}
+      \postdate{\par\vspace{0.2em}}
       \usepackage{titlesec}
-      \titleformat*{\section}{\large\bfseries}
-      \titleformat*{\subsection}{\normalsize\bfseries}
-      \titlespacing*{\section}{0pt}{10pt}{4pt}
-      \titlespacing*{\subsection}{0pt}{8pt}{2pt}
+      \titleformat*{\section}{\Large\bfseries}
+      \titleformat*{\subsection}{\large\bfseries}
+      \titleformat*{\subsubsection}{\normalsize\bfseries}
+      \titlespacing*{\section}{0pt}{14pt}{6pt}
+      \titlespacing*{\subsection}{0pt}{10pt}{4pt}
+      \titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
       \usepackage{enumitem}
       \setlist{itemsep=2pt, topsep=3pt, leftmargin=*}
       \setlength{\parskip}{4pt}
@@ -60,7 +63,7 @@ We built the frame by counting each roster by hand and recording, for each unit,
 
 ### Overview
 
-We used **stratified simple random sampling without replacement with proportional allocation**, with a total sample size of $n = 100$ (above the suggested minimum of 75). The population is partitioned into $H = 27$ strata: departments, with a few very small units pooled (explained below). Within each stratum $h$ we selected a simple random sample of $n_h$ roster positions out of the $N_h$ faculty listed. 
+We used **stratified simple random sampling without replacement with proportional allocation**, with a total sample size of $n = 100$ (above the suggested minimum of 75). The population is partitioned into $H = 27$ strata: departments, with a few very small units pooled (explained below). Within each stratum $h$ we selected a simple random sample of $n_h$ roster positions out of the $N_h$ faculty listed.
 
 The sample-size calculation, the full allocation table, and the derivation of the weights and variance estimator are given in the Appendix.
 
@@ -76,17 +79,7 @@ faculty to get two sampled people on its own. Units below this size were pooled 
 - **Small Languages:** German Studies, Romance Studies, Slavic & Eurasian Studies, International Comparative Studies
 - **Military & PE:** Air Force ROTC, Army ROTC, Navy ROTC, Health, Wellness & Physical Education
 
-We pooled related fields so that each pooled stratum is still fairly homogeneous, which preserves most of the benefit of stratification. 
-
-### Why stratify by department
-
-We stratified by department mainly for precision. The share of women and the prevalence of grants differ sharply across fields, and when the stratum means $\bar{Y}_h$ are spread out, the within-stratum variances $S_h^2$ are small relative to $S^2$, so stratified sampling has smaller variance than a simple random sample of the same size. Stratifying also guarantees that every department appears in the sample, so no field can be missed by chance. Finally, it was convenient: the frame is already organized by department, so the stratum sizes $N_h$ came directly from counting each roster, and sampling within a stratum only requires that department's page.
-
-### Allocation: why proportional allocation
-
-We allocated the sample proportionally, $n_h \approx nN_h/N$, rounding so the total is exactly 100. Proportional allocation guarantees $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$, because it removes the between-strata variation from the variance. Unlike optimal allocation, which needs the unknown $S_h$ and is tuned to a single variable, it requires only the stratum sizes $N_h$ and serves all four questions equally. It is also nearly self-weighting: every faculty member's selection probability is $\pi_i = n_h/N_h \approx n/N$, so the weights $1/\pi_i$ are nearly equal.
-
-The resulting $n_h$, inclusion probabilities, and weights for all 27 strata are listed in Appendix B.
+We pooled related fields so that each pooled stratum is still fairly homogeneous, which preserves most of the benefit of stratification.
 
 ### Implementing the design in R
 
@@ -99,13 +92,28 @@ The `survey` package needs four pieces of information about each sampled faculty
 
 ```{r}
 #| label: design-object
+#| echo: true
 #| eval: false
 library(survey)
 des <- svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
                  fpc = ~N_h, data = dat)
 ```
 
-As a check, the estimated total of a variable equal to 1 for everyone, `svytotal(~one, des)`, equals $\sum_{i \in S} 1/\pi_i = 866$, the frame size. The estimator and variance formula that `survey` computes from these inputs are derived in Appendix C, and the full code is in Appendix D. Results for each question are in the Analysis section.
+As a check, the estimated total of a variable equal to 1 for everyone, `svytotal(~one, des)`, equals $\sum_{i \in S} 1/\pi_i = 866$, the frame size. The estimator and variance formula that `survey` computes from these inputs are derived in Appendix C, and the full code is in Appendix D. Results for each question are in the Results and Analysis section.
+
+## Rationale for Our Design Choices
+
+This section explains why we chose to stratify by department and why we allocated the sample proportionally.
+
+### Why stratify by department
+
+We stratified by department mainly for precision. The share of women and the prevalence of grants differ sharply across fields, and when the stratum means $\bar{Y}_h$ are spread out, the within-stratum variances $S_h^2$ are small relative to $S^2$, so stratified sampling has smaller variance than a simple random sample of the same size. Stratifying also guarantees that every department appears in the sample, so no field can be missed by chance. Finally, it was convenient: the frame is already organized by department, so the stratum sizes $N_h$ came directly from counting each roster, and sampling within a stratum only requires that department's page.
+
+### Why proportional allocation
+
+We allocated the sample proportionally, $n_h \approx nN_h/N$, rounding so the total is exactly 100. Proportional allocation guarantees $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$, because it removes the between-strata variation from the variance. Unlike optimal allocation, which needs the unknown $S_h$ and is tuned to a single variable, it requires only the stratum sizes $N_h$ and serves all four questions equally. It is also nearly self-weighting: every faculty member's selection probability is $\pi_i = n_h/N_h \approx n/N$, so the weights $1/\pi_i$ are nearly equal.
+
+The resulting $n_h$, inclusion probabilities, and weights for all 27 strata are listed in Appendix B.
 
 ## Data Collection
 
@@ -130,8 +138,6 @@ For each sampled person we recorded the following from their Scholars@Duke profi
 - **Emeriti.** A few sampled faculty are emeriti who are still listed on a department roster. They belong to our target population as defined, so we kept them rather than replacing them, since replacing sampled units would change the selection probabilities.
 - **Roster changes.** The Gender, Sexuality & Feminist Studies page listed 8 faculty when we built the frame and 9 when we collected data. We used the person at the sampled position on the current page and treat this as a minor frame error.
 - **Multiple listings.** Several sampled faculty also appear on another department's roster (for example, faculty with joint appointments in African & African American Studies or Theater Studies). As permitted for this project, we did not adjust their weights. Because these faculty had a higher chance of selection, any characteristic associated with joint appointments may be slightly overrepresented in our estimates.
-
-
 
 ```{r setup, include=FALSE}
 library(survey)
@@ -209,11 +215,11 @@ s4 <- svyciprop(~full_professor, des2)
 
 The final data set has `r nrow(dat)` sampled faculty. Before analysis we checked that every record had a valid stratum, that coded variables took only the values 0 and 1, and that a Ph.D. year was present only for faculty coded as having a Ph.D. We recorded `r n_phd` faculty with a Ph.D. and `r n_nophd` without (for example M.F.A., M.Ed. or M.A. as the highest degree). Missing values were handled as follows:
 
-- **Ph.D. year** is blank for the `r n_nophd` faculty without a Ph.D., which is expected, and for no one who has one. 
+- **Ph.D. year** is blank for the `r n_nophd` faculty without a Ph.D., which is expected, and for no one who has one.
 - **Ongoing grant** is missing for `r n_missing["ongoing_grant_2026"]` faculty member whose profile has the grant information turned off.
 - **Sex, Ph.D. status and rank** have no missing values.
 
-Rather than impute, each estimate uses the sampled faculty who have the variable observed. With only one missing value in the analysis, the choice has no practical effect on any estimate. 
+Rather than impute, each estimate uses the sampled faculty who have the variable observed. With only one missing value in the analysis, the choice has no practical effect on any estimate.
 
 ## Results and Analysis
 
@@ -242,20 +248,28 @@ res <- data.frame(
 knitr::kable(res, align = "lrr", caption = "Design-based estimates with 95% confidence intervals (n = 100).")
 ```
 
-**Question 1: fraction women.** We estimate that `r pct(q1)` of Trinity faculty are women (95% CI: `r ci_pct(q1_ci)`). The sample contained `r n_women` women and `r n_men` men. The interval includes 50%, so the data do not rule out an even split, but they are more consistent with women being a minority of the faculty.
+### Question 1: Fraction of faculty who are women
 
-**Question 2: ongoing grants.** We estimate that `r pct(q2)` of faculty have at least one grant ongoing in 2026 (95% CI: `r ci_pct(q2_ci)`). Most faculty therefore do not have an active grant. We counted a grant if its award period overlapped 2026, regardless of the faculty member's role, so training grants where the person is a mentor are included. A  stricter definition (principal investigator only) would give a lower fraction.
+We estimate that `r pct(q1)` of Trinity faculty are women (95% CI: `r ci_pct(q1_ci)`). The sample contained `r n_women` women and `r n_men` men. The interval includes 50%, so the data do not rule out an even split, but they are more consistent with women being a minority of the faculty.
 
-**Question 3: years since Ph.D.** Among Ph.D. holders, the average time since the degree is `r sprintf("%.1f", coef(q3))` years (95% CI: `r sprintf("%.1f to %.1f", q3_ci[1], q3_ci[2])`). We estimate that about `r pct(q3b, 0)` of faculty hold a Ph.D. (95% CI: `r ci_pct(q3b_ci)`), and the sample's Ph.D. years range from `r min(dat$years_since_phd, na.rm = TRUE)` to `r max(dat$years_since_phd, na.rm = TRUE)` years ago. The range is large because the faculty include recent hires and senior professors.
+### Question 2: Ongoing grants in 2026
 
-**Question 4: do women and men differ in rank** Our "full professor" code groups ranks that differ in meaning (distinguished and endowed chairs, Professors of the Practice, and emeriti with the rank). We estimate that `r pct(q4)` of faculty are full professors overall (95% CI: `r ci_pct(q4_ci)`). For women the estimate is `r pct(q4_by$full_professor[2])` and for men `r pct(q4_by$full_professor[1])`. The estimated difference is `r sprintf("%.1f", 100 * as.numeric(q4_diff))`% (95% CI: `r sprintf("%.1f to %.1f", 100 * q4_diff_ci[1], 100 * q4_diff_ci[2])`), and the Rao-Scott test gives $p =$ `r sprintf("%.2f", q4_test$p.value)`. We therefore find no evidence of a difference in the share of full professors between women and men. It does not adjust for years since the Ph.D., so any real gap in rank may be hidden or explained by seniority.
+We estimate that `r pct(q2)` of faculty have at least one grant ongoing in 2026 (95% CI: `r ci_pct(q2_ci)`). Most faculty therefore do not have an active grant. We counted a grant if its award period overlapped 2026, regardless of the faculty member's role, so training grants where the person is a mentor are included. A stricter definition (principal investigator only) would give a lower fraction.
+
+### Question 3: Years since Ph.D.
+
+Among Ph.D. holders, the average time since the degree is `r sprintf("%.1f", coef(q3))` years (95% CI: `r sprintf("%.1f to %.1f", q3_ci[1], q3_ci[2])`). We estimate that about `r pct(q3b, 0)` of faculty hold a Ph.D. (95% CI: `r ci_pct(q3b_ci)`), and the sample's Ph.D. years range from `r min(dat$years_since_phd, na.rm = TRUE)` to `r max(dat$years_since_phd, na.rm = TRUE)` years ago. The range is large because the faculty include recent hires and senior professors.
+
+### Question 4: Do women and men differ in rank?
+
+Our "full professor" code groups ranks that differ in meaning (distinguished and endowed chairs, Professors of the Practice, and emeriti with the rank). We estimate that `r pct(q4)` of faculty are full professors overall (95% CI: `r ci_pct(q4_ci)`). For women the estimate is `r pct(q4_by$full_professor[2])` and for men `r pct(q4_by$full_professor[1])`. The estimated difference is `r sprintf("%.1f", 100 * as.numeric(q4_diff))`% (95% CI: `r sprintf("%.1f to %.1f", 100 * q4_diff_ci[1], 100 * q4_diff_ci[2])`), and the Rao-Scott test gives $p =$ `r sprintf("%.2f", q4_test$p.value)`. We therefore find no evidence of a difference in the share of full professors between women and men. This comparison does not adjust for years since the Ph.D., so any real gap in rank may be hidden or explained by seniority.
 
 ```{r figure, fig.height = 2.6, fig.width = 6.5, fig.cap = "Estimated proportions with 95% confidence intervals."}
 est <- c(as.numeric(q1), as.numeric(q2), as.numeric(q4),
          q4_by$full_professor[2], q4_by$full_professor[1])
 lo <- c(q1_ci[1], q2_ci[1], q4_ci[1], q4_by$ci_l[2], q4_by$ci_l[1])
 hi <- c(q1_ci[2], q2_ci[2], q4_ci[2], q4_by$ci_u[2], q4_by$ci_u[1])
-labs <- c("Women (Q1)", "Ongoing grant (Q2)", "Full professor, all (Q4)", "Full professor, women (Q4)", "Full professor men (Q4)")
+labs <- c("Women (Q1)", "Ongoing grant (Q2)", "Full professor, all (Q4)", "Full professor, women (Q4)", "Full professor, men (Q4)")
 par(mar = c(4, 9.5, 1, 1))
 y <- rev(seq_along(est))
 plot(est, y, xlim = c(0, 1), ylim = c(0.5, length(est) + 0.5), pch = 19,
@@ -269,9 +283,11 @@ abline(v = 0.5, lty = 3, col = "grey60")
 ## Limitations
 
 - **Measurement of sex.** Sex was coded using pronouns in the biography where available and otherwise first name and photo. A few profiles state no sex identifiers, so some codes are inferences that may not match how those faculty identify. Misclassification would bias Question 1 slightly and would also affect the Question 4 comparison.
-- **Frame and duplicate listings.** Faculty with joint appointments can appear on more than one roster. Those faculty had more than one chance of selection but received the weight of the single department they were drawn from, so estimates are slightly biased toward their characteristics. 
+- **Frame and duplicate listings.** Faculty with joint appointments can appear on more than one roster. Those faculty had more than one chance of selection but received the weight of the single department they were drawn from, so estimates are slightly biased toward their characteristics.
 - **Design.** Several strata have only two or three sampled faculty, so the stratum-level variance estimates are unstable even though the overall variance is sound. Pooling unrelated small departments, though necessary, gives those strata less meaningful interpretations.
 - **Missing data.** The one missing grant value was excluded, not imputed. This has negligible effect here but assumes that faculty who disable their profile are not systematically different.
+
+### Sensitivity analysis
 
 ```{r sensitivity-table}
 sens <- data.frame(
@@ -287,12 +303,13 @@ sens <- data.frame(
 knitr::kable(sens, align = "lrr", caption = sprintf("Sensitivity: excluding the %d emeriti and double-listed faculty (the remaining %d are kept in the design)", n_emer + n_dbl, nrow(dat) - n_emer - n_dbl))
 ```
 
-As a check on the two judgment calls above (not included in conclusion), the table recomputes each estimate after removing the emeriti and double-listed faculty from the sample, keeping the rest of the design unchanged. The largest change is in Question 3, where the average falls by about a year, as expected since emeriti are among the most senior faculty and have the longest time since their Ph.D. 
+As a check on the two judgment calls above (not included in the conclusion), the table recomputes each estimate after removing the emeriti and double-listed faculty from the sample, keeping the rest of the design unchanged. The largest change is in Question 3, where the average falls by about a year, as expected since emeriti are among the most senior faculty and have the longest time since their Ph.D.
 
 ## Conclusion
 
-We used a stratified simple random sample of 100 faculty, allocated in proportion to department size, to estimate characteristics of Trinity College faculty. We estimate that about `r pct(q1, 0)` of faculty are women (95% CI: `r ci_pct(q1_ci)`), that about `r pct(q2, 0)` have a grant ongoing in 2026 (95% CI: `r ci_pct(q2_ci)`), and that Ph.D. holders earned their degree an average of `r sprintf("%.0f", coef(q3))` years ago (95% CI: `r sprintf("%.1f to %.1f", q3_ci[1], q3_ci[2])`). For our additional question, the share of full professors is nearly identical for women (`r pct(q4_by$full_professor[2], 0)`) and men (`r pct(q4_by$full_professor[1], 0)`), with no statistically detectable difference, although the sample is too small to rule out a moderate one.The main limits are the width of the intervals at n = 100, the hand-coded sex and grant variables, and duplicate roster listings. With more time we would increase the sample, run a pilot to estimate department-level variability for optimal allocation, and measure rank more finely and adjust for years since the Ph.D. to learn whether women and men differ in rank once seniority is accounted for.
+We used a stratified simple random sample of 100 faculty, allocated in proportion to department size, to estimate characteristics of Trinity College faculty. We estimate that about `r pct(q1, 0)` of faculty are women (95% CI: `r ci_pct(q1_ci)`), that about `r pct(q2, 0)` have a grant ongoing in 2026 (95% CI: `r ci_pct(q2_ci)`), and that Ph.D. holders earned their degree an average of `r sprintf("%.0f", coef(q3))` years ago (95% CI: `r sprintf("%.1f to %.1f", q3_ci[1], q3_ci[2])`). For our additional question, the share of full professors is nearly identical for women (`r pct(q4_by$full_professor[2], 0)`) and men (`r pct(q4_by$full_professor[1], 0)`), with no statistically detectable difference, although the sample is too small to rule out a moderate one.
 
+The main limits are the width of the intervals at n = 100, the hand-coded sex and grant variables, and duplicate roster listings. With more time we would increase the sample, run a pilot to estimate department-level variability for optimal allocation, and measure rank more finely and adjust for years since the Ph.D. to learn whether women and men differ in rank once seniority is accounted for.
 
 \newpage
 
@@ -383,7 +400,9 @@ Question 3 (average years since Ph.D. among Ph.D. holders) is a **domain estimat
 
 ### D. Code
 
-**Drawing the sample.** This code drew the roster positions used for data collection. It is shown, not re-run, so the report does not overwrite the sample file.
+#### Drawing the sample
+
+This code drew the roster positions used for data collection. It is shown, not re-run, so the report does not overwrite the sample file.
 
 ```{r}
 #| label: draw-sample
@@ -406,7 +425,9 @@ sample_ids$weight <- strata$weight[match(sample_ids$stratum, strata$stratum)]
 write.csv(sample_ids, "sample_ids.csv", row.names = FALSE)
 ```
 
-**Analysis.** The code that builds the design object and computes every estimate in the Results section:
+#### Analysis
+
+The code that builds the design object and computes every estimate in the Results and Analysis section:
 
 ```{r ref.label=c("setup", "results-table", "figure", "sensitivity-table"), echo=TRUE, eval=FALSE}
 ```
