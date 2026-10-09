@@ -281,7 +281,7 @@ abline(v = 0.5, lty = 3, col = "grey60")
 
 We used a stratified simple random sample of 100 faculty, allocated in proportion to department size, to estimate characteristics of Trinity College faculty. We estimate that about `r pct(q1, 0)` of faculty are women (95% CI: `r ci_pct(q1_ci)`), that about `r pct(q2, 0)` have a grant ongoing in 2026 (95% CI: `r ci_pct(q2_ci)`), and that Ph.D. holders earned their degree an average of `r sprintf("%.0f", coef(q3))` years ago (95% CI: `r sprintf("%.1f to %.1f", q3_ci[1], q3_ci[2])`). For our additional question, the share of full professors is nearly identical for women (`r pct(q4_by$full_professor[2], 0)`) and men (`r pct(q4_by$full_professor[1], 0)`), with no statistically detectable difference, although the sample is too small to rule out a moderate one.
 
-The main limits are the width of the intervals at n = 100, the hand-coded sex and grant variables, and duplicate roster listings. With more time we would increase the sample, run a pilot to estimate department-level variability for optimal allocation, and measure rank more finely and adjust for years since the Ph.D. to learn whether women and men differ in rank once seniority is accounted for.
+The main limits are the width of the confidence intervals at n = 100, the hand-coded sex and grant variables, and the potential for duplicate roster listings (although there are none in our sample). With more time we would increase the sample, run a pilot to estimate department-level variability for optimal allocation, and measure rank more finely and adjust for years since the Ph.D. to learn whether women and men differ in rank once seniority is accounted for.
 
 \newpage
 
