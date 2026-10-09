@@ -38,6 +38,7 @@ execute:
 #| label: libraries
 #| include: false
 library(knitr)
+library(survey)
 ```
 
 ## Introduction
@@ -49,21 +50,21 @@ This project uses a probability sample to estimate characteristics of faculty in
 3. Among faculty with a Ph.D., what is the average number of years since the degree?
 4. Do women and men differ in the fraction who are full professors?
 
-The sampling frame is built from departmental web pages, and the data for each sampled faculty member come from their Scholars@Duke profile. Although it might be possible to collect information on every faculty member, the purpose of the project is to practice survey sampling, so we drew a probability sample and use design-based estimation. Question 1 is the primary target, so we chose the design to estimate a proportion precisely while keeping data collection manageable for a two-person team.
+The sampling frame is built from departmental web pages, and the data for each sampled faculty member come from their Scholars@Duke profile. Although it might be possible to collect information on every faculty member, the purpose of the project is to practice survey sampling, so we drew a probability sample and use design-based estimation. 
 
 ## Target Population and Sampling Frame
 
-The target population is everyone listed on the faculty web pages of Trinity College's 36 departments and programs as of October 1, 2026. For each unit we used the "primary faculty" page where one exists, because it lists faculty whose main appointment is in that department. Some units do not post a primary-faculty page; for those (e.g., English, Theater Studies, Music, Religious Studies) we used the full faculty listing. The population therefore includes tenure-track faculty, lecturers, instructors, research and practice faculty, ROTC cadre, and any emeriti whom a department still lists.
+The target population is everyone listed on the faculty web pages of Trinity College's 36 departments and programs as of October 1, 2026. For each unit we used the "primary faculty" page where one exists, because it lists faculty whose main appointment is in that department. Some units do not post a primary-faculty page. For those (e.g., English, Theater Studies, Music, Religious Studies), we used the full faculty listing. The population therefore includes tenure-track faculty, lecturers, instructors, research and practice faculty, ROTC cadre, and any emeriti whom a department still lists.
 
-Because some departments list all of their faculty rather than only primary faculty, a faculty member with a joint appointment can appear on more than one roster. Removing these duplicates would require matching every name across all 36 rosters before sampling. We therefore retained every listing and treated each faculty member appearing on a department's page as a member of that department. The practical consequence is that a person listed twice has two chances of selection; we flag such cases in our data and discuss them as a limitation.
+Because some departments list all of their faculty rather than only primary faculty, a faculty member with a joint appointment can appear on more than one roster. Removing these duplicates would require matching every name across all 36 rosters before sampling. We therefore retained every listing and treated each faculty member appearing on a department's page as a member of that department. The practical consequence is that a person listed twice has two chances of selection. We flag such cases in our data and discuss them as a limitation.
 
-We built the frame by counting each roster by hand and recording, for each unit, the number of faculty listed. This gives a frame of $N = 866$ faculty across 36 units. Only these counts were needed to design the sample; the names themselves were looked up only for sampled positions.
+We built the frame by counting each roster by hand and recording, for each unit, the number of faculty listed. This gives a frame of $N = 866$ faculty across 36 units. 
 
 ## Survey Design
 
 ### Overview
 
-We used **stratified simple random sampling without replacement with proportional allocation**, with a total sample size of $n = 100$ (above the suggested minimum of 75). The population is partitioned into $H = 27$ strata: departments, with a few very small units pooled (explained below). Within each stratum $h$ we selected a simple random sample of $n_h$ roster positions out of the $N_h$ faculty listed.
+We used **stratified simple random sampling without replacement with proportional allocation**, with a total sample size of $n = 100$. The population is partitioned into $H = 27$ strata: departments, with a few very small units pooled. Within each stratum $h$ we selected a simple random sample of $n_h$ roster positions out of the $N_h$ faculty listed.
 
 The sample-size calculation, the full allocation table, and the derivation of the weights and variance estimator are given in the Appendix.
 
@@ -94,12 +95,11 @@ The `survey` package needs four pieces of information about each sampled faculty
 #| label: design-object
 #| echo: true
 #| eval: false
-library(survey)
 des <- svydesign(ids = ~1, strata = ~stratum, weights = ~weight,
                  fpc = ~N_h, data = dat)
 ```
 
-As a check, the estimated total of a variable equal to 1 for everyone, `svytotal(~one, des)`, equals $\sum_{i \in S} 1/\pi_i = 866$, the frame size. The estimator and variance formula that `survey` computes from these inputs are derived in Appendix C, and the full code is in Appendix D. Results for each question are in the Results and Analysis section.
+The estimator and variance formula that `survey` computes from these inputs are derived in Appendix C, and the full code is in Appendix D. 
 
 ## Rationale for Our Design Choices
 
@@ -111,7 +111,7 @@ We stratified by department mainly for precision. The share of women and the pre
 
 ### Why proportional allocation
 
-We allocated the sample proportionally, $n_h \approx nN_h/N$, rounding so the total is exactly 100. Proportional allocation guarantees $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$, because it removes the between-strata variation from the variance. Unlike optimal allocation, which needs the unknown $S_h$ and is tuned to a single variable, it requires only the stratum sizes $N_h$ and serves all four questions equally. It is also nearly self-weighting: every faculty member's selection probability is $\pi_i = n_h/N_h \approx n/N$, so the weights $1/\pi_i$ are nearly equal.
+We allocated the sample proportionally, $n_h \approx nN_h/N$, rounding so the total is exactly 100. Proportional allocation guarantees $\operatorname{Var}(\hat{t}_{prop}) \le \operatorname{Var}(\hat{t}_{srs})$, because it removes the between-strata variation from the variance. Unlike optimal allocation, which needs the unknown $S_h$ and is tuned to a single variable, it requires only the stratum sizes $N_h$ and serves all four questions equally. It is also nearly self-weighting: every faculty member's selection probability is $\pi_i = n_h/N_h \approx n/N$.
 
 The resulting $n_h$, inclusion probabilities, and weights for all 27 strata are listed in Appendix B.
 
@@ -119,25 +119,16 @@ The resulting $n_h$, inclusion probabilities, and weights for all 27 strata are 
 
 ### Drawing the sample
 
-We drew the sample in R with `set.seed(322)` so it can be reproduced exactly. In each stratum $h$ we selected $n_h$ distinct roster positions at random from $1, \dots, N_h$. In pooled strata, positions run through the member departments in a fixed order (for example, in Dance & Theater, positions 1 to 7 are Dance and 8 to 28 are Theater Studies), and each position was mapped back to a department and a position on that department's page. The sampled person is the name at that position, counting down the page in the order shown on the website. The sampling code is reproduced in Appendix D.
-
-We divided collection by stratum: Janet collected the strata from African & African American Studies through History, and Amy collected the remaining strata.
+We drew the sample in R with `set.seed(322)` so it can be reproduced exactly. In each stratum $h$ we selected $n_h$ distinct roster positions at random from $1, \dots, N_h$. In pooled strata, positions run through the member departments in a fixed order, and each position was mapped back to a department and a position on that department's page. The sampled person is the name at that position, counting down the page in the order shown on the website. The sampling code is reproduced in Appendix D.
 
 ### Variables and coding rules
 
-For each sampled person we recorded the following from their Scholars@Duke profile, using rules we agreed on in advance so that both collectors coded the same way:
+For each sampled person we recorded the following from their Scholars@Duke profile:
 
-- **Sex (Question 1).** Coded from pronouns in the profile biography where given, and otherwise from first name and profile photo, as the assignment directs.
+- **Sex (Question 1).** Coded from pronouns in the profile biography where given, and otherwise from first name and profile photo.
 - **Ongoing grant in 2026 (Question 2).** Coded 1 if any grant listed on the profile has an award period that overlaps calendar year 2026, regardless of the person's role (principal investigator, co-investigator, or mentor on a training grant). Fellowships and gifts, which Scholars lists separately from grants, were not counted.
-- **Ph.D. status and year (Question 3).** From the Education section. A D.Phil. was counted as a Ph.D.; an M.F.A., M.Ed., M.A., or other degree was not. Years since Ph.D. is $2026 - \text{Ph.D. year}$.
-- **Rank (Question 4).** We recorded the full title and coded *full professor* as 1 for any title at the rank of Professor, including named and distinguished chairs, Professor of the Practice, Research Professor, and emeriti at that rank. Assistant and associate professors, lecturers, instructors, and other titles were coded 0.
-
-### Missing data and frame issues
-
-- **Missing information.** A few profiles were incomplete. One faculty member had disabled most profile features, and three others had no Ph.D. year listed. For these four, we took the Ph.D. year from the person's personal website. One person's grant status could not be determined (their personal website lists a grant awarded in 2022 with no end date), so it was recorded as missing. Missing values are excluded from the estimate for that question only.
-- **Emeriti.** A few sampled faculty are emeriti who are still listed on a department roster. They belong to our target population as defined, so we kept them rather than replacing them, since replacing sampled units would change the selection probabilities.
-- **Roster changes.** The Gender, Sexuality & Feminist Studies page listed 8 faculty when we built the frame and 9 when we collected data. We used the person at the sampled position on the current page and treat this as a minor frame error.
-- **Multiple listings.** Several sampled faculty also appear on another department's roster (for example, faculty with joint appointments in African & African American Studies or Theater Studies). As permitted for this project, we did not adjust their weights. Because these faculty had a higher chance of selection, any characteristic associated with joint appointments may be slightly overrepresented in our estimates.
+- **Ph.D. status and year (Question 3).** From the Education section. A D.Phil. was counted as a Ph.D.. An M.F.A., M.Ed., M.A., or other degree was not. Years since Ph.D. is $2026 - \text{Ph.D. year}$.
+- **Rank (Question 4).** We recorded the full title and coded *full professor* as 1 for any title at the rank of Professor, including named and distinguished chairs, Professor of the Practice, Research Professor, and Emeriti at that rank. Assistant and associate professors, lecturers, instructors, and other titles were coded 0.
 
 ```{r setup, include=FALSE}
 library(survey)
@@ -211,15 +202,14 @@ s3 <- svymean(~years_since_phd, subset(des2, has_phd %in% 1 & !is.na(years_since
 s4 <- svyciprop(~full_professor, des2)
 ```
 
-## Data Cleaning and Missing Data
+### Missing data and frame issues
 
-The final data set has `r nrow(dat)` sampled faculty. Before analysis we checked that every record had a valid stratum, that coded variables took only the values 0 and 1, and that a Ph.D. year was present only for faculty coded as having a Ph.D. We recorded `r n_phd` faculty with a Ph.D. and `r n_nophd` without (for example M.F.A., M.Ed. or M.A. as the highest degree). Missing values were handled as follows:
+- **Missing information.** A few profiles were incomplete or missing information, which was coded as missing values. Missing values are excluded from the estimate for that question only and were not imputed because the small number of missing values has no practical effect on any estimate. No values of sex, Ph.D. status, or rank are missing, and Ph.D. year is blank only for the `r n_nophd` faculty without a Ph.D..
+- **Emeriti.** Of the sampled faculty, `r n_emer` are emeriti who are still listed on a department roster. They belong to our target population as defined, so we kept them rather than replacing them, since replacing sampled units would change the selection probabilities.
+- **Roster changes.** The Gender, Sexuality & Feminist Studies page listed 8 faculty when we built the frame and 9 when we collected data. We used the person at the sampled position on the current page and treat this as a minor frame error.
+- **Multiple listings.** Of the sampled faculty, `r n_dbl` were flagged as also appearing on another department's roster (for example, faculty with joint appointments in African & African American Studies or Theater Studies). Because these faculty had a higher chance of selection, any characteristic associated with joint appointments may be slightly overrepresented in our estimates.
 
-- **Ph.D. year** is blank for the `r n_nophd` faculty without a Ph.D., which is expected, and for no one who has one.
-- **Ongoing grant** is missing for `r n_missing["ongoing_grant_2026"]` faculty member whose profile has the grant information turned off.
-- **Sex, Ph.D. status and rank** have no missing values.
-
-Rather than impute, each estimate uses the sampled faculty who have the variable observed. With only one missing value in the analysis, the choice has no practical effect on any estimate.
+Before analysis we checked that every record had a valid stratum, that coded variables took only the values 0 and 1, and that a Ph.D. year was present only for faculty coded as having a Ph.D. The final data set has `r nrow(dat)` faculty, `r n_phd` with a Ph.D. and `r n_nophd` without.
 
 ## Results and Analysis
 
