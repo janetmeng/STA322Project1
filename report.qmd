@@ -56,7 +56,7 @@ The sampling frame is built from departmental web pages, and the data for each s
 
 The target population is everyone listed on the faculty web pages of Trinity College's 36 departments and programs as of October 1, 2026. For each unit we used the "primary faculty" page where one exists, because it lists faculty whose main appointment is in that department. Some units do not post a primary-faculty page. For those (e.g., English, Theater Studies, Music, Religious Studies), we used the full faculty listing. The population therefore includes tenure-track faculty, lecturers, instructors, research and practice faculty, ROTC cadre, and any emeriti whom a department still lists.
 
-Because some departments list all of their faculty rather than only primary faculty, a faculty member with a joint appointment can appear on more than one roster. Removing these duplicates would require matching every name across all 36 rosters before sampling. We therefore retained every listing and treated each faculty member appearing on a department's page as a member of that department. The practical consequence is that a person listed twice has two chances of selection. We flag such cases in our data and discuss them as a limitation.
+Because some departments list all of their faculty rather than only primary faculty, a faculty member with a joint appointment can appear on more than one roster. Removing these duplicates would require matching every name across all 36 rosters before sampling. We therefore retained every listing and treated each faculty member appearing on a department's page as a member of that department. The practical consequence is that a person listed on two rosters has two chances of selection and could, in principle, be drawn twice, once through each listing. We flag faculty who appear on more than one roster in our data and discuss this as a limitation.
 
 We built the frame by counting each roster by hand and recording, for each unit, the number of faculty listed. This gives a frame of $N = 866$ faculty across 36 units. 
 
@@ -119,7 +119,7 @@ The resulting $n_h$, inclusion probabilities, and weights for all 27 strata are 
 
 ### Drawing the sample
 
-We drew the sample in R with `set.seed(322)` so it can be reproduced exactly. In each stratum $h$ we selected $n_h$ distinct roster positions at random from $1, \dots, N_h$. In pooled strata, positions run through the member departments in a fixed order, and each position was mapped back to a department and a position on that department's page. The sampled person is the name at that position, counting down the page in the order shown on the website. The sampling code is reproduced in Appendix D.
+We drew the sample in R with `set.seed(322)` so it can be reproduced exactly. In each stratum $h$ we selected $n_h$ distinct roster positions at random from $1, \dots, N_h$. In pooled strata, positions run through the member departments in a fixed order, and each position was mapped back to a department and a position on that department's page. The sampled person is the name at that position, counting down the page in the order shown on the website. The sampling code is reproduced in Appendix D. After drawing the sample, we checked the sampled names for anyone selected more than once; there were none.
 
 ### Variables and coding rules
 
@@ -207,7 +207,7 @@ s4 <- svyciprop(~full_professor, des2)
 - **Missing information.** A few profiles were incomplete or missing information, which was coded as missing values. Missing values are excluded from the estimate for that question only and were not imputed because the small number of missing values has no practical effect on any estimate. No values of sex, Ph.D. status, or rank are missing, and Ph.D. year is blank only for the `r n_nophd` faculty without a Ph.D..
 - **Emeriti.** Of the sampled faculty, `r n_emer` are emeriti who are still listed on a department roster. They belong to our target population as defined, so we kept them rather than replacing them, since replacing sampled units would change the selection probabilities.
 - **Roster changes.** The Gender, Sexuality & Feminist Studies page listed 8 faculty when we built the frame and 9 when we collected data. We used the person at the sampled position on the current page and treat this as a minor frame error.
-- **Multiple listings.** Of the sampled faculty, `r n_dbl` were flagged as also appearing on another department's roster (for example, faculty with joint appointments in African & African American Studies or Theater Studies). Because these faculty had a higher chance of selection, any characteristic associated with joint appointments may be slightly overrepresented in our estimates.
+- **Multiple listings.** Of the sampled faculty, `r n_dbl` were flagged as also appearing on another department's roster (for example, faculty with joint appointments in African & African American Studies or Theater Studies).  We checked the sampled names, and no faculty member was selected more than once, so each of the `r nrow(dat)` records is a distinct person. Anyone repeating this procedure should run the same check and report any repeats, because any characteristic associated with joint appointments may be slightly overrepresented in their estimates. 
 
 Before analysis we checked that every record had a valid stratum, that coded variables took only the values 0 and 1, and that a Ph.D. year was present only for faculty coded as having a Ph.D. The final data set has `r nrow(dat)` faculty, `r n_phd` with a Ph.D. and `r n_nophd` without.
 
@@ -273,27 +273,9 @@ abline(v = 0.5, lty = 3, col = "grey60")
 ## Limitations
 
 - **Measurement of sex.** Sex was coded using pronouns in the biography where available and otherwise first name and photo. A few profiles state no sex identifiers, so some codes are inferences that may not match how those faculty identify. Misclassification would bias Question 1 slightly and would also affect the Question 4 comparison.
-- **Frame and duplicate listings.** Faculty with joint appointments can appear on more than one roster. Those faculty had more than one chance of selection but received the weight of the single department they were drawn from, so estimates are slightly biased toward their characteristics.
+- **Frame and duplicate listings.** Faculty with joint appointments can appear on more than one roster. Those faculty would have more than one chance of selection but receive the weight of the single department they were drawn from, so estimates could be slightly biased toward their characteristics. That did not happen here, but it could in a repeated draw, so a replication should check for repeated names. A cleaner fix would be to deduplicate the frame by assigning each person to one primary department before sampling, or to divide each person's weight by their number of listings.
 - **Design.** Several strata have only two or three sampled faculty, so the stratum-level variance estimates are unstable even though the overall variance is sound. Pooling unrelated small departments, though necessary, gives those strata less meaningful interpretations.
 - **Missing data.** The one missing grant value was excluded, not imputed. This has negligible effect here but assumes that faculty who disable their profile are not systematically different.
-
-### Sensitivity analysis
-
-```{r sensitivity-table}
-sens <- data.frame(
-  Question = c("1. Women", "2. Ongoing grant", "3. Mean years since Ph.D.",
-               "4a. Full professor, all"),
-  `All 100` = c(sprintf("%.1f%%", 100 * q1), sprintf("%.1f%%", 100 * q2),
-                sprintf("%.1f", coef(q3)), sprintf("%.1f%%", 100 * q4)),
-  `Without emeriti and double-listed` = c(sprintf("%.1f%%", 100 * s1),
-                                         sprintf("%.1f%%", 100 * s2),
-                                         sprintf("%.1f", coef(s3)),
-                                         sprintf("%.1f%%", 100 * s4)),
-  check.names = FALSE)
-knitr::kable(sens, align = "lrr", caption = sprintf("Sensitivity: excluding the %d emeriti and double-listed faculty (the remaining %d are kept in the design)", n_emer + n_dbl, nrow(dat) - n_emer - n_dbl))
-```
-
-As a check on the two judgment calls above (not included in the conclusion), the table recomputes each estimate after removing the emeriti and double-listed faculty from the sample, keeping the rest of the design unchanged. The largest change is in Question 3, where the average falls by about a year, as expected since emeriti are among the most senior faculty and have the longest time since their Ph.D.
 
 ## Conclusion
 
@@ -419,5 +401,6 @@ write.csv(sample_ids, "sample_ids.csv", row.names = FALSE)
 
 The code that builds the design object and computes every estimate in the Results and Analysis section:
 
-```{r ref.label=c("setup", "results-table", "figure", "sensitivity-table"), echo=TRUE, eval=FALSE}
+
+```{r ref.label=c("setup", "results-table", "figure"), echo=TRUE, eval=FALSE}
 ```
